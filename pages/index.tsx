@@ -15,15 +15,16 @@ const CardLink = ({ href, text, children }) => {
 const Home = observer(({ styles }) => {
   const { songsStore } = stores;
   return (
+    <>
     <div className={styles.grid}>
       <div className={styles.card}>
         <CardLink href='/songs' text='诗歌 &rarr;'>
-          <p>Choose songs from Psalms and Hymns for sunday worship</p>
+          <p>Choose songs from Psalm</p>
         </CardLink>
       </div>
       <div className={styles.card}>
         <CardLink href='/goldensentence' text='本周金句 &rarr;' >
-          <p>Choose a scentence from Bible as the week Golden words for sunday worship</p>
+          <p>Choose a scentence </p>
         </CardLink>
       </div>
       <div className={styles.card}>
@@ -46,11 +47,14 @@ const Home = observer(({ styles }) => {
           <p>Report matters of the week</p>
         </CardLink>
       </div>
-      <ButtonGroup variant='contained' color='primary' size='large'>
-      <Button >生成PPT</Button>
-      <Button color='secondary'>生成PDF</Button>
-      </ButtonGroup>
     </div>
+    <div className={styles.buttongroup} >
+          <ButtonGroup variant='contained' color='primary' size='large'>
+          <Button >生成PPT</Button>
+          <Button >生成PDF</Button>
+        </ButtonGroup>
+    </div>
+    </>
   )
 })
 
