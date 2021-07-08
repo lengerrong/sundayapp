@@ -1,3 +1,4 @@
+import { Button, ButtonGroup } from '@material-ui/core';
 import Link from 'next/link'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
@@ -45,6 +46,10 @@ const Home = observer(({ styles }) => {
           <p>Report matters of the week</p>
         </CardLink>
       </div>
+      <ButtonGroup variant='contained' color='primary' size='large'>
+      <Button >生成PPT</Button>
+      <Button color='secondary'>生成PDF</Button>
+      </ButtonGroup>
     </div>
   )
 })
