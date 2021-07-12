@@ -9361,3 +9361,51 @@
 独一永生上主，天地一同敬拜，
 昔在今在永在，直到千秋万代。
 
+/**
+ const res = await fetch('psalm.txt')
+        const posts = await res.text()
+        const ss = posts.split('\r\n\r\n');
+        
+        const hymns = [];
+        const psalms = []
+        let song = {}
+        for (const text of ss) {
+            text = text.trim(' ')
+            if (text.startsWith('圣诗')) {
+               
+
+                song = {}
+                let m = text.match(/(\d+)\s+(\S+)/)
+                if (m) {
+                    song.index = m[1]
+                    song.title = m[2]
+                } else {
+                    m = text.match(/(\d+)/)
+                    song.index = m[1]
+                }
+                song.type= 1;
+                song.verses = []
+                hymns.push(song)
+            } else if (text.startsWith('诗篇')) {
+                song = {}
+                const m = text.match(/(\d+)\s+(\S+)/)
+                if (m) {
+                    song.index = m[1]
+                    song.title = m[2]
+                }
+                song.type= 0;
+                song.verses = []
+                psalms.push(song)
+
+            } else {
+                
+                const m = text.match(/(\S+\s+)?(\d+)\.\s+((\S+(\s+)?)+)/)
+                if (m) {
+                    song.verses.push({subtitle: m[1], index: m[2], text: m[3]})
+                }
+            }
+        }
+        
+        console.log( JSON.stringify(psalms))
+        console.log(JSON.stringify(hymns))
+*/

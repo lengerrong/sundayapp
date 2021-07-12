@@ -48,7 +48,6 @@ export default function SongSelect({onSongSelect}) {
     const songIndexLabel = '第' + index + '首';
     const sectionsLabel = '第' + sections + '节';
     const song = songs[type-1][index-1];
-
     const onTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setType(Number(event.target.value) || '');
         if (event.target.value == 1 && index > hymns.length) {
@@ -84,7 +83,9 @@ export default function SongSelect({onSongSelect}) {
         if (sections.length < 1) {
             return;
         }
-        onSongSelect && onSongSelect({type: type-1, index: index-1, sections});
+        let selectedSong = {...song};
+        selectedSong.verses = selectedSong.verses.filter(verse => sections.includes(Number(verse.index)));
+        onSongSelect && onSongSelect(selectedSong);
         cleanState();
     };
 
