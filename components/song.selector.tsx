@@ -8,10 +8,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+
+const psalms = require('../jsons/psalms')
+const hymns = require('../jsons/hymns')
+const songs = [psalms, hymns]
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,71 +34,125 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function SongSelect() {
+const defaultType = 1;
+const defaultIndex = 1;
+const defaultSections = [];
+
+export default function SongSelect({onSongSelect}) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [age, setAge] = React.useState<number | string>('');
+    const [type, setType] = React.useState<number | string>(defaultType);
+    const [index, setIndex] = React.useState<number | string>(defaultIndex);
+    const [sections, setSections] = React.useState<[number]>(defaultSections);
+    const maxIndex = type == defaultType ? psalms.length : hymns.length;
+    const songIndexLabel = '第' + index + '首';
+    const sectionsLabel = '第' + sections + '节';
+    const song = songs[type-1][index-1];
 
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setAge(Number(event.target.value) || '');
+    const onTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setType(Number(event.target.value) || '');
+        if (event.target.value == 1 && index > hymns.length) {
+            setIndex(1)
+        }
     };
+
+    const onIndexChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        let indexValue = Number(event.target.value) || 1;
+        if (indexValue < 1) {
+            indexValue = 1;
+        }
+        if (indexValue > maxIndex) {
+            indexValue = maxIndex;
+        }
+        setIndex(indexValue);
+        setSections(defaultSections);
+    };
+
+    const onSectionsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setSections(event.target.value);
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        cleanState();
     };
+
+    const handleOk = () => {
+        if (sections.length < 1) {
+            return;
+        }
+        onSongSelect && onSongSelect({type: type-1, index: index-1, sections});
+        cleanState();
+    };
+
+    const cleanState = () => {
+        setOpen(false);
+        setIndex(defaultIndex);
+        setType(defaultType);
+        setSections(defaultSections);
+    }
 
     return (
         <div>
-            <Fab color="secondary" aria-label="add" className={classes.margin} onClick={handleClickOpen}>
+            <Fab size='small' color="secondary" aria-label="add" className={classes.margin} onClick={handleClickOpen}>
                 <AddIcon />
             </Fab>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Fill the form</DialogTitle>
+                <DialogTitle>选择诗歌</DialogTitle>
                 <DialogContent>
                     <form className={classes.container}>
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="demo-dialog-native">Age</InputLabel>
+                            <InputLabel id="song-type-selector-label">赞美诗</InputLabel>
                             <Select
-                                native
-                                value={age}
-                                onChange={handleChange}
-                                input={<Input id="demo-dialog-native" />}
-                            >
-                                <option aria-label="None" value="" />
-                                <option value={10}>Ten</option>
-                                <option value={20}>Twenty</option>
-                                <option value={30}>Thirty</option>
+                                value={type}
+                                labelId='song-type-selector-label'
+                                onChange={onTypeChange} >
+                                <MenuItem value={1}>诗篇</MenuItem>
+                                <MenuItem value={2}>圣诗</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-dialog-select-label">Age</InputLabel>
+                            <TextField
+                                id="song-index-number"
+                                label={songIndexLabel}
+                                type="number"
+                                value={index}
+                                onChange={onIndexChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                InputProps={{
+                                    inputProps: {
+                                        max: maxIndex,
+                                        min: 1
+                                    }
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl} error={sections.length < 1}>
+                            <InputLabel id="song-sections-selector-label">{sectionsLabel}</InputLabel>
                             <Select
-                                labelId="demo-dialog-select-label"
-                                id="demo-dialog-select"
-                                value={age}
-                                onChange={handleChange}
-                                input={<Input />}
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                value={sections}
+                                multiple
+                                labelId='song-sections-selector-label'
+                                onChange={onSectionsChange} >
+                                {song.verses.map((verse) => (
+                                    <MenuItem key={verse.index} value={Number(verse.index)}>{verse.index}</MenuItem>
+                                ))}
                             </Select>
+                            {sections.length < 1 && <FormHelperText>请至少选择一节歌</FormHelperText>}
                         </FormControl>
                     </form>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
-                        Cancel
+                        取消
           </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Ok
+                    <Button onClick={handleOk} color="primary">
+                        确定
           </Button>
                 </DialogActions>
             </Dialog>
