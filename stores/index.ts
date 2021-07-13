@@ -1,7 +1,9 @@
 import songsStore from './songs.store'
+import goldenSentenceStore from './golden.sentence.store'
 
 const stores = {
-    songsStore
+    songsStore,
+    goldenSentenceStore
 }
 
 export default stores;

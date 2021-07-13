@@ -1,0 +1,676 @@
+{
+    "data": [
+        {
+            "canon": "ot",
+            "booksList": [
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 1,
+                    "bookUsfm": "GEN",
+                    "canon": "ot",
+                    "bookName": "创世记",
+                    "bookAbbrName": "创",
+                    "bookChapterMaxNumber": 50,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 2,
+                    "bookUsfm": "EXO",
+                    "canon": "ot",
+                    "bookName": "出埃及记",
+                    "bookAbbrName": "出",
+                    "bookChapterMaxNumber": 40,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 3,
+                    "bookUsfm": "LEV",
+                    "canon": "ot",
+                    "bookName": "利未记",
+                    "bookAbbrName": "利",
+                    "bookChapterMaxNumber": 27,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 4,
+                    "bookUsfm": "NUM",
+                    "canon": "ot",
+                    "bookName": "民数记",
+                    "bookAbbrName": "民",
+                    "bookChapterMaxNumber": 36,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 5,
+                    "bookUsfm": "DEU",
+                    "canon": "ot",
+                    "bookName": "申命记",
+                    "bookAbbrName": "申",
+                    "bookChapterMaxNumber": 34,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 6,
+                    "bookUsfm": "JOS",
+                    "canon": "ot",
+                    "bookName": "约书亚记",
+                    "bookAbbrName": "书",
+                    "bookChapterMaxNumber": 24,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 7,
+                    "bookUsfm": "JDG",
+                    "canon": "ot",
+                    "bookName": "士师记",
+                    "bookAbbrName": "士",
+                    "bookChapterMaxNumber": 21,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 8,
+                    "bookUsfm": "RUT",
+                    "canon": "ot",
+                    "bookName": "路得记",
+                    "bookAbbrName": "得",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 9,
+                    "bookUsfm": "1SA",
+                    "canon": "ot",
+                    "bookName": "撒母耳记上",
+                    "bookAbbrName": "撒上",
+                    "bookChapterMaxNumber": 31,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 10,
+                    "bookUsfm": "2SA",
+                    "canon": "ot",
+                    "bookName": "撒母耳记下",
+                    "bookAbbrName": "撒下",
+                    "bookChapterMaxNumber": 24,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 11,
+                    "bookUsfm": "1KI",
+                    "canon": "ot",
+                    "bookName": "列王纪上",
+                    "bookAbbrName": "王上",
+                    "bookChapterMaxNumber": 22,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 12,
+                    "bookUsfm": "2KI",
+                    "canon": "ot",
+                    "bookName": "列王纪下",
+                    "bookAbbrName": "王下",
+                    "bookChapterMaxNumber": 25,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 13,
+                    "bookUsfm": "1CH",
+                    "canon": "ot",
+                    "bookName": "历代志上",
+                    "bookAbbrName": "代上",
+                    "bookChapterMaxNumber": 29,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 14,
+                    "bookUsfm": "2CH",
+                    "canon": "ot",
+                    "bookName": "历代志下",
+                    "bookAbbrName": "代下",
+                    "bookChapterMaxNumber": 36,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 15,
+                    "bookUsfm": "EZR",
+                    "canon": "ot",
+                    "bookName": "以斯拉记",
+                    "bookAbbrName": "拉",
+                    "bookChapterMaxNumber": 10,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 16,
+                    "bookUsfm": "NEH",
+                    "canon": "ot",
+                    "bookName": "尼希米记",
+                    "bookAbbrName": "尼",
+                    "bookChapterMaxNumber": 13,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 17,
+                    "bookUsfm": "EST",
+                    "canon": "ot",
+                    "bookName": "以斯帖记",
+                    "bookAbbrName": "斯",
+                    "bookChapterMaxNumber": 10,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 18,
+                    "bookUsfm": "JOB",
+                    "canon": "ot",
+                    "bookName": "约伯记",
+                    "bookAbbrName": "伯",
+                    "bookChapterMaxNumber": 42,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 19,
+                    "bookUsfm": "PSA",
+                    "canon": "ot",
+                    "bookName": "诗篇",
+                    "bookAbbrName": "诗",
+                    "bookChapterMaxNumber": 150,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 20,
+                    "bookUsfm": "PRO",
+                    "canon": "ot",
+                    "bookName": "箴言",
+                    "bookAbbrName": "箴",
+                    "bookChapterMaxNumber": 31,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 21,
+                    "bookUsfm": "ECC",
+                    "canon": "ot",
+                    "bookName": "传道书",
+                    "bookAbbrName": "传",
+                    "bookChapterMaxNumber": 12,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 22,
+                    "bookUsfm": "SNG",
+                    "canon": "ot",
+                    "bookName": "雅歌",
+                    "bookAbbrName": "歌",
+                    "bookChapterMaxNumber": 8,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 23,
+                    "bookUsfm": "ISA",
+                    "canon": "ot",
+                    "bookName": "以赛亚书",
+                    "bookAbbrName": "赛",
+                    "bookChapterMaxNumber": 66,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 24,
+                    "bookUsfm": "JER",
+                    "canon": "ot",
+                    "bookName": "耶利米书",
+                    "bookAbbrName": "耶",
+                    "bookChapterMaxNumber": 52,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 25,
+                    "bookUsfm": "LAM",
+                    "canon": "ot",
+                    "bookName": "耶利米哀歌",
+                    "bookAbbrName": "哀",
+                    "bookChapterMaxNumber": 5,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 26,
+                    "bookUsfm": "EZK",
+                    "canon": "ot",
+                    "bookName": "以西结书",
+                    "bookAbbrName": "结",
+                    "bookChapterMaxNumber": 48,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 27,
+                    "bookUsfm": "DAN",
+                    "canon": "ot",
+                    "bookName": "但以理书",
+                    "bookAbbrName": "但",
+                    "bookChapterMaxNumber": 12,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 28,
+                    "bookUsfm": "HOS",
+                    "canon": "ot",
+                    "bookName": "何西阿书",
+                    "bookAbbrName": "何",
+                    "bookChapterMaxNumber": 14,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 29,
+                    "bookUsfm": "JOL",
+                    "canon": "ot",
+                    "bookName": "约珥书",
+                    "bookAbbrName": "珥",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 30,
+                    "bookUsfm": "AMO",
+                    "canon": "ot",
+                    "bookName": "阿摩司书",
+                    "bookAbbrName": "摩",
+                    "bookChapterMaxNumber": 9,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 31,
+                    "bookUsfm": "OBA",
+                    "canon": "ot",
+                    "bookName": "俄巴底亚书",
+                    "bookAbbrName": "俄",
+                    "bookChapterMaxNumber": 1,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 32,
+                    "bookUsfm": "JON",
+                    "canon": "ot",
+                    "bookName": "约拿书",
+                    "bookAbbrName": "拿",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 33,
+                    "bookUsfm": "MIC",
+                    "canon": "ot",
+                    "bookName": "弥迦书",
+                    "bookAbbrName": "弥",
+                    "bookChapterMaxNumber": 7,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 34,
+                    "bookUsfm": "NAM",
+                    "canon": "ot",
+                    "bookName": "那鸿书",
+                    "bookAbbrName": "鸿",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 35,
+                    "bookUsfm": "HAB",
+                    "canon": "ot",
+                    "bookName": "哈巴谷书",
+                    "bookAbbrName": "哈",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 36,
+                    "bookUsfm": "ZEP",
+                    "canon": "ot",
+                    "bookName": "西番雅书",
+                    "bookAbbrName": "番",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 37,
+                    "bookUsfm": "HAG",
+                    "canon": "ot",
+                    "bookName": "哈该书",
+                    "bookAbbrName": "该",
+                    "bookChapterMaxNumber": 2,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 38,
+                    "bookUsfm": "ZEC",
+                    "canon": "ot",
+                    "bookName": "撒迦利亚书",
+                    "bookAbbrName": "亚",
+                    "bookChapterMaxNumber": 14,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 39,
+                    "bookUsfm": "MAL",
+                    "canon": "ot",
+                    "bookName": "玛拉基书",
+                    "bookAbbrName": "玛",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                }
+            ]
+        },
+        {
+            "canon": "nt",
+            "booksList": [
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 40,
+                    "bookUsfm": "MAT",
+                    "canon": "nt",
+                    "bookName": "马太福音",
+                    "bookAbbrName": "太",
+                    "bookChapterMaxNumber": 28,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 41,
+                    "bookUsfm": "MRK",
+                    "canon": "nt",
+                    "bookName": "马可福音",
+                    "bookAbbrName": "可",
+                    "bookChapterMaxNumber": 16,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 42,
+                    "bookUsfm": "LUK",
+                    "canon": "nt",
+                    "bookName": "路加福音",
+                    "bookAbbrName": "路",
+                    "bookChapterMaxNumber": 24,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 43,
+                    "bookUsfm": "JHN",
+                    "canon": "nt",
+                    "bookName": "约翰福音",
+                    "bookAbbrName": "约",
+                    "bookChapterMaxNumber": 21,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 44,
+                    "bookUsfm": "ACT",
+                    "canon": "nt",
+                    "bookName": "使徒行传",
+                    "bookAbbrName": "徒",
+                    "bookChapterMaxNumber": 28,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 45,
+                    "bookUsfm": "ROM",
+                    "canon": "nt",
+                    "bookName": "罗马书",
+                    "bookAbbrName": "罗",
+                    "bookChapterMaxNumber": 16,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 46,
+                    "bookUsfm": "1CO",
+                    "canon": "nt",
+                    "bookName": "哥林多前书",
+                    "bookAbbrName": "林前",
+                    "bookChapterMaxNumber": 16,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 47,
+                    "bookUsfm": "2CO",
+                    "canon": "nt",
+                    "bookName": "哥林多后书",
+                    "bookAbbrName": "林后",
+                    "bookChapterMaxNumber": 13,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 48,
+                    "bookUsfm": "GAL",
+                    "canon": "nt",
+                    "bookName": "加拉太书",
+                    "bookAbbrName": "加",
+                    "bookChapterMaxNumber": 6,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 49,
+                    "bookUsfm": "EPH",
+                    "canon": "nt",
+                    "bookName": "以弗所书",
+                    "bookAbbrName": "弗",
+                    "bookChapterMaxNumber": 6,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 50,
+                    "bookUsfm": "PHP",
+                    "canon": "nt",
+                    "bookName": "腓立比书",
+                    "bookAbbrName": "腓",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 51,
+                    "bookUsfm": "COL",
+                    "canon": "nt",
+                    "bookName": "歌罗西书",
+                    "bookAbbrName": "西",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 52,
+                    "bookUsfm": "1TH",
+                    "canon": "nt",
+                    "bookName": "帖撒罗尼迦前书",
+                    "bookAbbrName": "帖前",
+                    "bookChapterMaxNumber": 5,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 53,
+                    "bookUsfm": "2TH",
+                    "canon": "nt",
+                    "bookName": "帖撒罗尼迦后书",
+                    "bookAbbrName": "帖后",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 54,
+                    "bookUsfm": "1TI",
+                    "canon": "nt",
+                    "bookName": "提摩太前书",
+                    "bookAbbrName": "提前",
+                    "bookChapterMaxNumber": 6,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 55,
+                    "bookUsfm": "2TI",
+                    "canon": "nt",
+                    "bookName": "提摩太后书",
+                    "bookAbbrName": "提后",
+                    "bookChapterMaxNumber": 4,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 56,
+                    "bookUsfm": "TIT",
+                    "canon": "nt",
+                    "bookName": "提多书",
+                    "bookAbbrName": "多",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 57,
+                    "bookUsfm": "PHM",
+                    "canon": "nt",
+                    "bookName": "腓利门书",
+                    "bookAbbrName": "门",
+                    "bookChapterMaxNumber": 1,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 58,
+                    "bookUsfm": "HEB",
+                    "canon": "nt",
+                    "bookName": "希伯来书",
+                    "bookAbbrName": "来",
+                    "bookChapterMaxNumber": 13,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 59,
+                    "bookUsfm": "JAS",
+                    "canon": "nt",
+                    "bookName": "雅各书",
+                    "bookAbbrName": "雅",
+                    "bookChapterMaxNumber": 5,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 60,
+                    "bookUsfm": "1PE",
+                    "canon": "nt",
+                    "bookName": "彼得前书",
+                    "bookAbbrName": "彼前",
+                    "bookChapterMaxNumber": 5,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 61,
+                    "bookUsfm": "2PE",
+                    "canon": "nt",
+                    "bookName": "彼得后书",
+                    "bookAbbrName": "彼后",
+                    "bookChapterMaxNumber": 3,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 62,
+                    "bookUsfm": "1JN",
+                    "canon": "nt",
+                    "bookName": "约翰壹书",
+                    "bookAbbrName": "约一",
+                    "bookChapterMaxNumber": 5,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 63,
+                    "bookUsfm": "2JN",
+                    "canon": "nt",
+                    "bookName": "约翰贰书",
+                    "bookAbbrName": "约二",
+                    "bookChapterMaxNumber": 1,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 64,
+                    "bookUsfm": "3JN",
+                    "canon": "nt",
+                    "bookName": "约翰叁书",
+                    "bookAbbrName": "约三",
+                    "bookChapterMaxNumber": 1,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 65,
+                    "bookUsfm": "JUD",
+                    "canon": "nt",
+                    "bookName": "犹大书",
+                    "bookAbbrName": "犹",
+                    "bookChapterMaxNumber": 1,
+                    "versesCount": 0
+                },
+                {
+                    "versionCode": "cnvs",
+                    "bookId": 66,
+                    "bookUsfm": "REV",
+                    "canon": "nt",
+                    "bookName": "启示录",
+                    "bookAbbrName": "启",
+                    "bookChapterMaxNumber": 22,
+                    "versesCount": 0
+                }
+            ]
+        }
+    ],
+    "errno": 200,
+    "msg": "success"
+}

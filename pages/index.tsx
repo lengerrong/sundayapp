@@ -15,7 +15,7 @@ const CardLink = ({ href, text, children }) => {
 }
 
 const Home = observer(({ styles }) => {
-  const { songsStore } = stores
+  const { songsStore, goldenSentenceStore } = stores
   return (
     <>
     <div className={styles.grid}>
