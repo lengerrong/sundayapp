@@ -1,7 +1,9 @@
-import { Button, ButtonGroup } from '@material-ui/core'
+import { Button, ButtonGroup, Chip } from '@material-ui/core'
 import Link from 'next/link'
+import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
+import getSongLable from '../utils'
 
 const CardLink = ({ href, text, children }) => {
   return <Link href={href} >
@@ -18,12 +20,20 @@ const Home = observer(({ styles }) => {
     <>
     <div className={styles.grid}>
       <div className={styles.card}>
-        <CardLink href='/songs' text='诗歌 &rarr'>
-          <p>Choose songs from Psalm</p>
+        <CardLink href='/songs' text='诗歌 →'>
+          {songsStore.songs.map((song, index) => (
+             <Chip
+                  key={getSongLable(song)+index}
+                  className={styles.chip}
+                  color='second'
+                  icon={<LibraryMusicIcon />}
+                  label={getSongLable(song)}
+                />))
+          }
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/goldensentence' text='本周金句 &rarr' >
+        <CardLink href='/goldensentence' text='本周金句 →' >
           <p>Choose a scentence </p>
         </CardLink>
       </div>
@@ -33,17 +43,17 @@ const Home = observer(({ styles }) => {
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/report' text='报告事项 &rarr' >
+        <CardLink href='/report' text='报告事项 →' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/scriptures' text='阅读经文、证道经文 &rarr' >
+        <CardLink href='/scriptures' text='阅读经文、证道经文 →' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/preaching' text='证道 &rarr' >
+        <CardLink href='/preaching' text='证道 →' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>

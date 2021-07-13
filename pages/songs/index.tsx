@@ -8,6 +8,7 @@ import songsStore from '../../stores/songs.store'
 import { Chip, Divider, Grid } from '@material-ui/core'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import DragMoveDrop from '../../components/drag.move.drop'
+import getSongLable from '../../utils'
 
 const Songs = observer(({ styles }) => {
   const [currentSong, setCurrentSong] = React.useState({})
@@ -18,9 +19,6 @@ const Songs = observer(({ styles }) => {
     songsStore.setSongs(newSongs)
     selectedSong.arrayIndex = newSongs.length - 1
     setCurrentSong(selectedSong)
-  }
-  const getSongLable = (song) => {
-    return (song.type == 0 ? '诗篇' : '圣诗') + song.index + ': 第' + song.verses.map(verse => verse.index).join(',') + '节'
   }
   const onSongClick = (song) => {
     console.log(song)
@@ -38,10 +36,10 @@ const Songs = observer(({ styles }) => {
     const songLabel = getSongLable(song)
     return (
       <Chip
-        key={songLabel}
+        key={songLabel + song.arrayIndex}
         className={styles.chip}
         clickable
-        color={song.arrayIndex === currentSong.arrayIndex ? "primary":"second"}
+        color={song.arrayIndex === currentSong.arrayIndex ? 'primary':'second'}
         icon={<LibraryMusicIcon />}
         label={songLabel}
         onClick={() => onSongClick(song)}
