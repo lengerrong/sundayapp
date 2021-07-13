@@ -139,4 +139,7 @@
   .main {
     max-height: 50vh;
   }
+  .songContainer {
+    flex-wrap: nowrap !important;
+  }
 }

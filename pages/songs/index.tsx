@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import SongSelect from '../../components/song.selector'
 import SongPanel from '../../components/song.panel'
 import songsStore from '../../stores/songs.store'
-import { Chip } from '@material-ui/core'
+import { Chip, Divider, Grid } from '@material-ui/core'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import DragMoveDrop from '../../components/drag.move.drop'
 
@@ -16,6 +16,7 @@ const Songs = observer(({ styles }) => {
     let newSongs = Array.from(songs)
     newSongs.push({ ...selectedSong, position })
     songsStore.setSongs(newSongs)
+    selectedSong.arrayIndex = newSongs.length - 1
     setCurrentSong(selectedSong)
   }
   const getSongLable = (song) => {
@@ -23,18 +24,15 @@ const Songs = observer(({ styles }) => {
   }
   const onSongClick = (song) => {
     console.log(song)
-    if (song.index != currentSong.index ||
-      song.position != currentSong.position ||
-      song.title != currentSong.title ||
-      JSON.stringify(song.verses) !== JSON.stringify(currentSong.verses)) {
+    if (song.arrayIndex != currentSong.arrayIndex) {
       setCurrentSong(song)
     }
   }
   const onDeleteSong = (song) => {
     let newSongs = Array.from(songs)
     newSongs.splice(song.arrayIndex, 1)
+    setCurrentSong(newSongs.length >= 1 ? {...newSongs[0], arrayIndex:0} : {})
     songsStore.setSongs(newSongs)
-    setCurrentSong(newSongs.length >= 1 ? newSongs[0] : {})
   }
   const SongChip = (song) => {
     const songLabel = getSongLable(song)
@@ -43,7 +41,7 @@ const Songs = observer(({ styles }) => {
         key={songLabel}
         className={styles.chip}
         clickable
-        color="primary"
+        color={song.arrayIndex === currentSong.arrayIndex ? "primary":"second"}
         icon={<LibraryMusicIcon />}
         label={songLabel}
         onClick={() => onSongClick(song)}
@@ -54,7 +52,7 @@ const Songs = observer(({ styles }) => {
   let displaySongs = Array.from(songs)
   displaySongs = displaySongs.map((song, index) => ({ ...song, arrayIndex: index }))
   return (
-    <div className={styles.grid}>
+    <Grid container direction='row' justifyContent='space-between' alignItems='center' className={styles.songContainer} >
       <ButtonGroup orientation="vertical" variant="text" color="primary" aria-label="vertical text primary button group">
         <DragMoveDrop>
           {displaySongs.filter((song) => song.position == 0).map(SongChip)}
@@ -76,8 +74,9 @@ const Songs = observer(({ styles }) => {
         </DragMoveDrop>
         <SongSelect onSongSelect={(selectedSong) => onSongSelect(selectedSong, 3)} />
       </ButtonGroup>
+      <Divider orientation="vertical" flexItem variant='middle' />
       <SongPanel song={currentSong} />
-    </div>
+    </Grid>
   )
 })
 
