@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 const songsStore = makeAutoObservable({
-    songs: {},
+    songs: [],
     setSongs(songs) {
         this.songs = songs
     }

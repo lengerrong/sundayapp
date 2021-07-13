@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core'
 import Link from 'next/link'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
@@ -13,17 +13,17 @@ const CardLink = ({ href, text, children }) => {
 }
 
 const Home = observer(({ styles }) => {
-  const { songsStore } = stores;
+  const { songsStore } = stores
   return (
     <>
     <div className={styles.grid}>
       <div className={styles.card}>
-        <CardLink href='/songs' text='诗歌 &rarr;'>
+        <CardLink href='/songs' text='诗歌 &rarr'>
           <p>Choose songs from Psalm</p>
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/goldensentence' text='本周金句 &rarr;' >
+        <CardLink href='/goldensentence' text='本周金句 &rarr' >
           <p>Choose a scentence </p>
         </CardLink>
       </div>
@@ -33,17 +33,17 @@ const Home = observer(({ styles }) => {
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/report' text='报告事项 &rarr;' >
+        <CardLink href='/report' text='报告事项 &rarr' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/scriptures' text='阅读经文、证道经文 &rarr;' >
+        <CardLink href='/scriptures' text='阅读经文、证道经文 &rarr' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/preaching' text='证道 &rarr;' >
+        <CardLink href='/preaching' text='证道 &rarr' >
           <p>Report matters of the week</p>
         </CardLink>
       </div>
@@ -58,4 +58,4 @@ const Home = observer(({ styles }) => {
   )
 })
 
-export default Home;
+export default Home
