@@ -8,7 +8,7 @@ import songsStore from '../../stores/songs.store'
 import { Chip, Divider, Grid } from '@material-ui/core'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import DragMoveDrop from '../../components/drag.move.drop'
-import getSongLable from '../../utils'
+import { getSongLable } from '../../utils'
 
 const Songs = observer(({ styles }) => {
   const [currentSong, setCurrentSong] = React.useState({})

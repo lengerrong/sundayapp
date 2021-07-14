@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
+    "copy-webpack-plugin": "^9.0.1",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "next": "11.0.1",

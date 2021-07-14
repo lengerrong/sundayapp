@@ -3,7 +3,7 @@ import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
-import getSongLable from '../utils'
+import { getSongLable } from '../utils'
 
 const CardLink = ({ href, text, children }) => {
   return <Link href={href} >
@@ -34,7 +34,6 @@ const Home = observer(({ styles }) => {
       </div>
       <div className={styles.card}>
         <CardLink href='/goldensentence' text='本周金句 →' >
-          <p>Choose a scentence </p>
         </CardLink>
       </div>
       <div className={styles.card}>
