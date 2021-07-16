@@ -13,6 +13,15 @@ function getScripturesByVolume(book) {
     return scriptures
 }
 
+function getScripturesBig({ search }) {
+    const searchs = search.split('|')
+    return searchs.map(s => {
+        let r = {}
+        r[s] = getScriptures({search: s})
+        return r
+    })
+}
+
 function getScriptures({ search }) {
     // example of search
     // 约翰福音15:5
@@ -70,11 +79,23 @@ function getScriptures({ search }) {
                 if (section.indexOf('-') != -1) {
                     const seIndexs = section.split('-').map(index => chapterContent.findIndex(e => e.startsWith(index)))
                     if (seIndexs[1] > seIndexs[0] && seIndexs[0] >= 0) {
+                        const prevIndex = seIndexs[0] - 1
+                        if (prevIndex >= 0) {
+                            if(!chapterContent[prevIndex].match(/^\d+/)) {
+                                sectionScriptures.push(chapterContent[prevIndex])
+                            }
+                        }
                         sectionScriptures = sectionScriptures.concat(chapterContent.slice(seIndexs[0], seIndexs[1] + 1))
                     }
                 } else {
-                    const seIndex = chapterContent.findIndex(e => e.startsWith(section))
+                    const seIndex = chapterContent.findIndex(e => e.startsWith(section) && section && section.length > 0)
                     if (seIndex != -1) {
+                        const prevIndex = seIndex - 1
+                        if (prevIndex >= 0) {
+                            if(!chapterContent[prevIndex].match(/^\d+/)) {
+                                sectionScriptures.push(chapterContent[prevIndex])
+                            }
+                        }
                         sectionScriptures.push(chapterContent[seIndex])
                     }
                 }
@@ -87,13 +108,16 @@ function getScriptures({ search }) {
 
 export default function handler(req, res) {
     const { query } = req
-    let result = {}
+    if (!query.search) {
+        return res.status(200).json([])
+    }
+    let result = []
     if (Array.isArray(query.search)) {
         for (const search of query.search) {
-            result[search] = getScriptures({search})
+            result = result.concat(getScripturesBig({search}))
         }
     } else {
-        result[query.search] = getScriptures(query)
+        result = result.concat(getScripturesBig(query))
     }
     res.status(200).json(result)
 }
