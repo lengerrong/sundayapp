@@ -1,10 +1,22 @@
 import Link from 'next/link'
 import { observer } from 'mobx-react-lite'
+import { TextareaAutosize } from '@material-ui/core'
+import reportMattersStore from '../../stores/report.matters.store'
 
 const Report = observer(({ styles }) => {
+  const { content } = reportMattersStore;
+  const onChange = (e) => {
+      reportMattersStore.setContent(e.target.value)
+  }
   return (
     <div className={styles.grid}>
-      This is the page for select report
+      <h1>报告事项</h1>
+      <TextareaAutosize
+        placeholder="1.&#10;2.&#10;3.&#10;"
+        className={styles.textarea}
+        value={content}
+        onChange={onChange}
+      />
     </div>
   )
 })

@@ -136,6 +136,11 @@
   color: goldenrod;
 }
 
+.textarea {
+  font-size: 3em;
+  width: 80vw;
+}
+
 @media (max-width: 600px) {
   .title {
     font-size: 3rem;

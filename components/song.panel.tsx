@@ -49,7 +49,6 @@ const SongPanel = observer(( {song} ) => {
     if (JSON.stringify(song) === '{}') {
         return null;
     }
-    console.log(song)
     const canNavNext = () => {
         return localSection.index < (song.verses.length - 1)
     }

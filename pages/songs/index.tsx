@@ -21,7 +21,6 @@ const Songs = observer(({ styles }) => {
     setCurrentSong(selectedSong)
   }
   const onSongClick = (song) => {
-    console.log(song)
     if (song.arrayIndex != currentSong.arrayIndex) {
       setCurrentSong(song)
     }

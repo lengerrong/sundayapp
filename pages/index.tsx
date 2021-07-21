@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Chip } from '@material-ui/core'
+import { Button, ButtonGroup, Chip, TextareaAutosize } from '@material-ui/core'
 import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer } from 'mobx-react-lite'
@@ -15,7 +15,11 @@ const CardLink = ({ href, text, children }) => {
 }
 
 const Home = observer(({ styles }) => {
-  const { songsStore, goldenSentenceStore, preachingSentenceStore, readingSentenceStore } = stores
+  const { songsStore, goldenSentenceStore, 
+    preachingSentenceStore, readingSentenceStore,
+    preachingArticleStore, reportMattersStore,
+    staffArrangementStore
+   } = stores
   return (
     <>
     <div className={styles.grid}>
@@ -39,12 +43,12 @@ const Home = observer(({ styles }) => {
       </div>
       <div className={styles.card}>
         <CardLink href='/minister' text={new Date().getMonth() + 1 + '月份事奉人员 →'} >
-          <p>Ministers of the month</p>
+        <p>{JSON.stringify(staffArrangementStore.arrangements)}</p>
         </CardLink>
       </div>
       <div className={styles.card}>
         <CardLink href='/report' text='报告事项 →' >
-          <p>Report matters of the week</p>
+          <pre>{reportMattersStore.content}</pre>
         </CardLink>
       </div>
       <div className={styles.card}>
@@ -54,8 +58,8 @@ const Home = observer(({ styles }) => {
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/preaching' text='证道 →' >
-          <p>Report matters of the week</p>
+        <CardLink href='/preaching' text='证道主题 →' >
+          <pre>{preachingArticleStore.content}</pre>
         </CardLink>
       </div>
     </div>
