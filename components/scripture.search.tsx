@@ -41,12 +41,14 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
     const localSearch = useLocalObservable(() => ({
         text: search,
         scriptures: null,
+        search: null,
         anchorEl: null,
         setText(text) {
             this.text = text
         },
-        setScriptures(scriptures) {
+        setScriptures(search, scriptures) {
             this.scriptures = scriptures
+            this.search =search
         },
         setAnchorEl(el) {
             this.anchorEl = el
@@ -55,7 +57,6 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
     useEffect(
         () => {
             if (search) {
-                localSearch.setText(search)
                 onSearch(search)
             }
             localSearch.setAnchorEl(null)
@@ -74,13 +75,16 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
         fetch('/api/scriptures?search=' + search)
             .then(res => res.json())
             .then(scriptures => {
-                localSearch.setScriptures(scriptures)
+                localSearch.setScriptures(search, scriptures)
+                onAddSearch()
             })
     }
 
     const onAddSearch = () => {
-        if (localSearch.scriptures && onUseSearch) {
-            onUseSearch(localSearch.scriptures)
+        const scripture = localSearch.scriptures && localSearch.scriptures[0];
+        const entries = scripture && Object.entries(scripture)
+        if (entries && entries.length > 0 && entries[0][1]) {
+            onUseSearch && onUseSearch(localSearch.scriptures, localSearch.search)
         }
     }
     const handleClick = (e) => {
@@ -126,9 +130,10 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
                     className={classes.input}
                     onChange={onChange}
                     placeholder='经文搜索'
+                    value={localSearch.text}
                     inputProps={{ 'aria-label': '经文搜索' }}
                 />
-                <IconButton onClick={onSearch} className={classes.iconButton} aria-label='search'>
+                <IconButton onClick={() => onSearch(localSearch.text)} className={classes.iconButton} aria-label='search'>
                     <SearchIcon />
                 </IconButton>
                 <Divider className={classes.divider} orientation='vertical' />
@@ -146,13 +151,13 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
                         const key = Object.entries(scripture)[0][0]
                         const value = Object.entries(scripture)[0][1]
                         return (<>
-                            {key && value && (value.length > 0) && <h2>{key}</h2>}
+                            {key && value && (value.length > 0) && <h2 key={key}>{key}</h2>}
                             {value && value.map(ss => ss.map(
                                 s => {
                                     if (s.match(/^\d+/)) {
-                                        return <p>{s}</p>
+                                        return <p key={s}>{s}</p>
                                     }
-                                    return <h3>{s}</h3>
+                                    return <h3 key={s}>{s}</h3>
                                 }
                             ))}
                         </>)

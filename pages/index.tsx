@@ -15,7 +15,7 @@ const CardLink = ({ href, text, children }) => {
 }
 
 const Home = observer(({ styles }) => {
-  const { songsStore, goldenSentenceStore } = stores
+  const { songsStore, goldenSentenceStore, preachingSentenceStore, readingSentenceStore } = stores
   return (
     <>
     <div className={styles.grid}>
@@ -34,6 +34,7 @@ const Home = observer(({ styles }) => {
       </div>
       <div className={styles.card}>
         <CardLink href='/goldensentence' text='本周金句 →' >
+          <span className={styles.golden}>{goldenSentenceStore.sentence.search}</span>
         </CardLink>
       </div>
       <div className={styles.card}>
@@ -48,7 +49,8 @@ const Home = observer(({ styles }) => {
       </div>
       <div className={styles.card}>
         <CardLink href='/scriptures' text='阅读经文、证道经文 →' >
-          <p>Report matters of the week</p>
+          {readingSentenceStore.sentence.search && <p>阅读经文：<span className={styles.reading}>{readingSentenceStore.sentence.search}</span></p>}
+          {preachingSentenceStore.sentence.search && <p>证道经文：<span className={styles.preaching}>{preachingSentenceStore.sentence.search}</span></p>}
         </CardLink>
       </div>
       <div className={styles.card}>

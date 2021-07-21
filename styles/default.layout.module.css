@@ -126,6 +126,16 @@
   justify-content: center;
 }
 
+.golden {
+  color: gold;
+}
+.reading {
+  color: royalblue;
+}
+.preaching {
+  color: goldenrod;
+}
+
 @media (max-width: 600px) {
   .title {
     font-size: 3rem;

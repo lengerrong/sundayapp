@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx'
 
-const goldenSentenceStore = makeAutoObservable({
+const preachingSentenceStore = makeAutoObservable({
     sentence: {},
     setSentence(sentence) {
         this.sentence = sentence
     }
 })
 
-export default goldenSentenceStore;
+export default preachingSentenceStore;
