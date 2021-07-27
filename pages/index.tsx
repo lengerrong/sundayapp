@@ -14,12 +14,62 @@ const CardLink = ({ href, text, children }) => {
   </Link>
 }
 
+const to2D = (n: Number) => {
+  if (n < 10) {
+    return '0' + n
+  }
+  return n.toString()
+}
+
+const getYYMMDD = (date: Date) => {
+  return date.getFullYear() + "-" + to2D(date.getMonth() + 1) + "-" + to2D(date.getDate());
+}
+
 const Home = observer(({ styles }) => {
   const { songsStore, goldenSentenceStore, 
     preachingSentenceStore, readingSentenceStore,
     preachingArticleStore, reportMattersStore,
     staffArrangementStore
    } = stores
+  
+  if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}") {
+    let sundays = []
+    const now = new Date()
+    sundays.push(new Date(now.setDate(now.getDate() - now.getDay())))
+    sundays.push(new Date(now.setDate(now.getDate() + 7)))
+    sundays.push(new Date(now.setDate(now.getDate() + 7)))
+    sundays.push(new Date(now.setDate(now.getDate() + 7)))
+    fetch('/api/minster?dates=' + sundays.map(sunday => getYYMMDD(sunday)).join(','))
+      .then(res => res.json())
+      .then(staffArranges => {
+        staffArrangementStore.setArrangements(staffArranges)
+      })
+  }
+
+  const staffArrangeTitle = () => {
+    let months = new Set(staffArrangementStore.arrangements.map(arrange => Number(arrange.riqi.substring(5, 7))))
+    return Array.from(months).join('、')
+  }
+
+  const saveStaffArranges = () => {
+    fetch('/api/minster', {
+      body: JSON.stringify(staffArrangementStore.arrangements), // must match 'Content-Type' header
+      cache: 'no-cache',
+      credentials: 'omit',
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: 'POST',
+      mode: 'same-origin',
+      redirect: 'follow',
+      referrer: 'no-referrer'
+    })
+  }
+
+  const generatePPT = () => {
+    saveStaffArranges()
+  }
+  
   return (
     <>
     <div className={styles.grid}>
@@ -42,8 +92,7 @@ const Home = observer(({ styles }) => {
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/minister' text={new Date().getMonth() + 1 + '月份事奉人员 →'} >
-        <p>{JSON.stringify(staffArrangementStore.arrangements)}</p>
+        <CardLink href='/minister' text={staffArrangeTitle() + '月份事奉人员 →'} >
         </CardLink>
       </div>
       <div className={styles.card}>
@@ -65,7 +114,7 @@ const Home = observer(({ styles }) => {
     </div>
     <div className={styles.buttongroup} >
           <ButtonGroup variant='contained' color='primary' size='large'>
-          <Button >生成PPT</Button>
+          <Button onClick={generatePPT}>生成PPT</Button>
           <Button >生成PDF</Button>
         </ButtonGroup>
     </div>

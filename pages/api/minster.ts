@@ -19,13 +19,27 @@ const omit_id = (arrangement: MinsterArragement) => {
 }
 
 async function getArrangements(req: NextApiRequest, res: NextApiResponse<Data>, mongodbClient: MongoClient) {
-    const { startDate, endDate } = req.query
-    if (!startDate || !endDate) {
+    let { startDate, endDate, dates } = req.query
+    if (!startDate && !dates) {
         return res.status(400).end()
+    }
+    if (!endDate) {
+        endDate = startDate
     }
     const database = mongodbClient.db('worship')
     const arrangements = database.collection('serving_staff_arrangements')
-    let result = await arrangements.find({ riqi: {$gte: startDate, $lte: endDate}}, { sort: { riqi: 1 } }).toArray()
+    let result = [];
+    if (startDate) {
+        result = await arrangements.find({ riqi: {$gte: startDate, $lte: endDate}}, { sort: { riqi: 1 } }).toArray()
+    } else {
+        for (let date of dates.split(',')) {
+            let dateArrange = await arrangements.findOne({riqi: date})
+            if (!dateArrange) {
+                dateArrange = {riqi: date}
+            }
+            result.push(dateArrange)
+        }
+    }
     result = result.map(omit_id)
     res.status(200).json(result)
 }
@@ -45,6 +59,7 @@ async function setArrangements(req: NextApiRequest, res: NextApiResponse, mongod
 }
 
 const MongodbConnect = async (callback, req, res) => {
+    console.log(process.env.MONGODB_URL)
     const client = new MongoClient(process.env.MONGODB_URL, 
         { useNewUrlParser: true, useUnifiedTopology: true })
     try {
