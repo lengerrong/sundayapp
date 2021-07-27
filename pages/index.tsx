@@ -22,7 +22,7 @@ const to2D = (n: Number) => {
 }
 
 const getYYMMDD = (date: Date) => {
-  return date.getFullYear() + "-" + to2D(date.getMonth() + 1) + "-" + to2D(date.getDate());
+  return date.getFullYear() + "-" + to2D(date.getMonth() + 1) + "-" + to2D(date.getDate())
 }
 
 const Home = observer(({ styles }) => {
@@ -47,7 +47,7 @@ const Home = observer(({ styles }) => {
   }
 
   const staffArrangeTitle = () => {
-    let months = new Set(staffArrangementStore.arrangements.map(arrange => Number(arrange.riqi.substring(5, 7))))
+    let months = new Set(staffArrangementStore.arrangements.map(arrange => arrange.riqi && Number(arrange.riqi.substring(5, 7))))
     return Array.from(months).join('、')
   }
 
@@ -66,8 +66,45 @@ const Home = observer(({ styles }) => {
     })
   }
 
+  const getThisSundayYYMMDD = () => {
+    const now = new Date()
+    now.setDate(now.getDate() - now.getDay() + 7)
+    return now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日'
+  }
+
   const generatePPT = () => {
     saveStaffArranges()
+    let pptParameters = {
+      songs: songsStore.songs,
+      goldensentence: goldenSentenceStore.sentence,
+      staffArranges: staffArrangementStore.arrangements,
+      reports: reportMattersStore.content,
+      readingScriptures: readingSentenceStore.sentence,
+      preachingScriptures: preachingSentenceStore.sentence,
+      preachingArticle: preachingArticleStore.content,
+    }
+    fetch('/api/ppt', {
+      body: JSON.stringify(pptParameters), // must match 'Content-Type' header
+      cache: 'no-cache',
+      credentials: 'omit',
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: 'POST',
+      mode: 'same-origin',
+      redirect: 'follow',
+      referrer: 'no-referrer'
+    })
+    .then( res => res.blob() )
+    .then( blob => {
+      let link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = getThisSundayYYMMDD() + '敬拜唱诗.pptx'
+      document.body.appendChild(link)
+      link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}))
+      link.remove()
+      window.URL.revokeObjectURL(link.href)
+    })
   }
   
   return (

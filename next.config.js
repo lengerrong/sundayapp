@@ -8,7 +8,8 @@ module.exports = {
                 new CopyPlugin({
                     patterns: [
                         { from: 'pages/api/scriptures/cnvs/nt', to: 'cnvs/nt' },
-                        { from: 'pages/api/scriptures/cnvs/ot', to: 'cnvs/ot' }
+                        { from: 'pages/api/scriptures/cnvs/ot', to: 'cnvs/ot' },
+                        { from: 'templates', to: 'templates' }
                     ],
                 })
             )
