@@ -2,6 +2,7 @@
 const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
+import { staffArrangeTitle } from '../../utils'
 //console.log(util.inspect(result, false, null))
 
 function unlinkCallback(err) {
@@ -20,6 +21,12 @@ function finishEnd(res, tmpPath) {
   res.end()
 }
 
+function updateSlideContent(pres, slide, content) {
+  slide.content = JSON.parse(content)
+  let slideKey = `ppt/slides/${slide.name}.xml`
+  pres.content[slideKey] = slide.content
+}
+
 async function updateGoldenSentence(pres, goldensentence) {
   let scripture = goldensentence.scriptures[0];
   let text = scripture[scripture.search].map(ss => ss.map(s => s.replace(/^\d+/, '')).join('')).join('')
@@ -28,12 +35,35 @@ async function updateGoldenSentence(pres, goldensentence) {
   content = content.replace('我是葡萄树，你们是枝子。住在我里面的，我也住在他里面，他就结出很多果子；因为离开了我，你们就不能作甚么。', text)
   content = content.replace('约翰福音', scripture.bookName)
   content = content.replace('15:5', scripture.chapter)
-  goldenSentenceSlide.content = JSON.parse(content)
-  let slideKey = `ppt/slides/${goldenSentenceSlide.name}.xml`
-  pres.content[slideKey] = goldenSentenceSlide.content
+  updateSlideContent(pres, goldenSentenceSlide, content)
+}
+
+async function updateStaffArrangements(pres, arrangements) {
+  let staffSlide = await pres.getSlide(11)
+  let content = JSON.stringify(staffSlide.content)
+  content = content.replace('month', staffArrangeTitle(arrangements))
+  arrangements = arrangements.map(arrange => {
+    arrange.riqi = parseInt(arrange.riqi.substring(8)).toString() + '日'
+    arrange.sishi = arrange.sishi.split(' ').map(s => s.padEnd(8, ' ')).join(' ')
+    return arrange
+  })
+  let placeholders = [
+    ['ls日', 'lsdailing','lssishi', 'lssiqing'],
+    ['ts日', 'tsdailing','tssishi', 'tssiqing'],
+    ['ns日', 'nsdailing','nssishi', 'nssiqing'],
+    ['nns日', 'nnssdailing','nnssishi', 'nnssiqing'],
+  ]
+  let keyholders = ['riqi', 'dailing', 'sishi', 'siqing']
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      content = content.replace(placeholders[i][j], arrangements[i][keyholders[j]])
+    }
+  }
+  updateSlideContent(pres, staffSlide, content)
 }
 
 export default async function handler(req, res) {
+  console.log(req.body)
   res.writeHead(200, {
     'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
   })
@@ -42,6 +72,7 @@ export default async function handler(req, res) {
   const tmpPPTX = '/tmp/worship' + Math.random() + '.pptx'
   await pptx.compose(async pres => {
     await updateGoldenSentence(pres, req.body.goldensentence)
+    await updateStaffArrangements(pres, req.body.staffArranges)
   });
 
   await pptx.save(tmpPPTX)

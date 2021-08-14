@@ -3,7 +3,7 @@ import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
-import { getSongLable } from '../utils'
+import { getSongLable, staffArrangeTitle } from '../utils'
 
 const CardLink = ({ href, text, children }) => {
   return <Link href={href} >
@@ -44,11 +44,6 @@ const Home = observer(({ styles }) => {
       .then(staffArranges => {
         staffArrangementStore.setArrangements(staffArranges)
       })
-  }
-
-  const staffArrangeTitle = () => {
-    let months = new Set(staffArrangementStore.arrangements.map(arrange => arrange.riqi && Number(arrange.riqi.substring(5, 7))))
-    return Array.from(months).join('、')
   }
 
   const saveStaffArranges = () => {
@@ -129,7 +124,7 @@ const Home = observer(({ styles }) => {
         </CardLink>
       </div>
       <div className={styles.card}>
-        <CardLink href='/minister' text={staffArrangeTitle() + '月份事奉人员 →'} >
+        <CardLink href='/minister' text={staffArrangeTitle(staffArrangementStore.arrangements) + '月份事奉人员 →'} >
         </CardLink>
       </div>
       <div className={styles.card}>
