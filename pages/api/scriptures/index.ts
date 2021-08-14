@@ -16,9 +16,7 @@ function getScripturesByVolume(book) {
 function getScripturesBig({ search }) {
     const searchs = search.split('|')
     return searchs.map(s => {
-        let r = {}
-        r[s] = getScriptures({search: s})
-        return r
+        return getScriptures({ search: s })
     })
 }
 
@@ -44,11 +42,21 @@ function getScriptures({ search }) {
         return null
     }
     if (!m[2]) {
-        return getScripturesByVolume(book)
+        let r = {}
+        r[search] = getScripturesByVolume(book)
+        r.bookName = book.bookName
+        r.chapter = '全卷'
+        r.search = search
+        return r
     }
     const chapters = m[2].split(';')
     if (chapters.length <= 0) {
-        return getScripturesByVolume(book)
+        let r = {}
+        r[search] = getScripturesByVolume(book)
+        r.bookName = book.bookName
+        r.search = search
+        r.chapter = '全卷'
+        return r
     }
     const chapterSectionsArray = chapters.map(chapter => {
         const cm = chapter.match(/[\s+]?(\d+)([\s+]?:[\s+]?(.*)[\s+]?)?/)
@@ -81,7 +89,7 @@ function getScriptures({ search }) {
                     if (seIndexs[1] > seIndexs[0] && seIndexs[0] >= 0) {
                         const prevIndex = seIndexs[0] - 1
                         if (prevIndex >= 0) {
-                            if(!chapterContent[prevIndex].match(/^\d+/)) {
+                            if (!chapterContent[prevIndex].match(/^\d+/)) {
                                 sectionScriptures.push(chapterContent[prevIndex])
                             }
                         }
@@ -92,7 +100,7 @@ function getScriptures({ search }) {
                     if (seIndex != -1) {
                         const prevIndex = seIndex - 1
                         if (prevIndex >= 0) {
-                            if(!chapterContent[prevIndex].match(/^\d+/)) {
+                            if (!chapterContent[prevIndex].match(/^\d+/)) {
                                 sectionScriptures.push(chapterContent[prevIndex])
                             }
                         }
@@ -103,7 +111,12 @@ function getScriptures({ search }) {
         }
         scriptures.push(sectionScriptures)
     }
-    return scriptures
+    let r = {}
+    r[search] = scriptures
+    r.bookName = book.bookName
+    r.chapter = m[2]
+    r.search = search
+    return r
 }
 
 export default function handler(req, res) {
@@ -114,7 +127,7 @@ export default function handler(req, res) {
     let result = []
     if (Array.isArray(query.search)) {
         for (const search of query.search) {
-            result = result.concat(getScripturesBig({search}))
+            result = result.concat(getScripturesBig({ search }))
         }
     } else {
         result = result.concat(getScripturesBig(query))
