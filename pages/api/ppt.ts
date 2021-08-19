@@ -2,6 +2,7 @@
 const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
+const xml2js = require('xml2js')
 import { staffArrangeTitle, convertToRoman } from '../../utils'
 //console.log(util.inspect(result, false, null))
 
@@ -25,6 +26,45 @@ function updateSlideContent(pres, slide, content) {
   slide.content = JSON.parse(content)
   let slideKey = `ppt/slides/${slide.name}.xml`
   pres.content[slideKey] = slide.content
+}
+
+async function pushparagrahtoslide(slide, lines) {
+  let pxml = '<a:p><a:pPr marL="0" indent="0"><a:buNone/></a:pPr><a:r><a:rPr lang="ja-JP" altLang="en-US" sz="2800"/><a:t>placeholder</a:t></a:r></a:p>'
+  let parser = new xml2js.Parser()
+  slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'] = []
+  for (let line of lines) {
+    let linexml = pxml.replace('placeholder', line)
+    let pxmljs = await parser.parseStringPromise(linexml)
+    slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'].push(pxmljs['a:p'])
+  }
+}
+
+async function updateReports(pres, reports) {
+  let slide = await pres.getSlide(12)
+  reports = reports.trim()
+  let lines = reports.split('\n')
+  let count = Math.ceil(lines.length / 9)
+  let pages = []
+  for (let i = 0; i < count; i++) {
+    pages.push(lines.slice(i*9, (i+1)*9))
+  }
+  console.log(pages)
+  let ocontent = JSON.stringify(slide.content)
+  await pushparagrahtoslide(slide, pages[0])
+  slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = ['1 / ' + count]
+  let slideKey = `ppt/slides/${slide.name}.xml`
+  pres.content[slideKey] = slide.content
+
+  for (let ii = 1; ii < count; ii++) {
+    await pres.addSlide(async slideii => {
+      slideii.content = JSON.parse(ocontent)
+      await pushparagrahtoslide(slideii, pages[ii])
+      slideii.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [(1+ii) +  ' / ' + count]
+      let slideiiKey = `ppt/slides/${slideii.name}.xml`
+      pres.content[slideiiKey] = slideii.content
+      slideii.moveTo(ii+12)
+    }, 'slideLayout16')
+  }
 }
 
 async function updateGoldenSentence(pres, goldensentence) {
@@ -108,6 +148,7 @@ export default async function handler(req, res) {
     await updateGoldenSentence(pres, req.body.goldensentence)
     await updateStaffArrangements(pres, req.body.staffArranges)
     await updatePreachingArticle(pres, req.body.preachingArticle)
+    await updateReports(pres, req.body.reports)
   });
 
   await pptx.save(tmpPPTX)
