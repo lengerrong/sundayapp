@@ -51,6 +51,7 @@ const Songs = observer(({ styles }) => {
   return (
     <Grid container direction='row' justifyContent='space-between' alignItems='center' className={styles.songContainer} >
       <ButtonGroup orientation="vertical" variant="text" color="primary" aria-label="vertical text primary button group">
+        <Button disabled>肃静静默</Button>
         <DragMoveDrop>
           {displaySongs.filter((song) => song.position == 0).map(SongChip)}
         </DragMoveDrop>
@@ -60,16 +61,25 @@ const Songs = observer(({ styles }) => {
           {displaySongs.filter((song) => song.position == 1).map(SongChip)}
         </DragMoveDrop>
         <SongSelect onSongSelect={(selectedSong) => onSongSelect(selectedSong, 1)} />
+        <Button disabled>肃静祷告</Button>
         <Button disabled>宣读十诫</Button>
         <DragMoveDrop>
           {displaySongs.filter((song) => song.position == 2).map(SongChip)}
         </DragMoveDrop>
         <SongSelect onSongSelect={(selectedSong) => onSongSelect(selectedSong, 2)} />
-        <Button disabled>证道</Button>
+        <Button disabled>报告事项</Button>
+        <Button disabled>乐捐</Button>
         <DragMoveDrop>
           {displaySongs.filter((song) => song.position == 3).map(SongChip)}
         </DragMoveDrop>
         <SongSelect onSongSelect={(selectedSong) => onSongSelect(selectedSong, 3)} />
+        <Button disabled>祷告</Button>
+        <Button disabled>证道</Button>
+        <DragMoveDrop>
+          {displaySongs.filter((song) => song.position == 4).map(SongChip)}
+        </DragMoveDrop>
+        <SongSelect onSongSelect={(selectedSong) => onSongSelect(selectedSong, 4)} />
+        <Button disabled>回应祷告</Button>
       </ButtonGroup>
       <Divider orientation="vertical" flexItem variant='middle' />
       <SongPanel song={currentSong} />
