@@ -11,7 +11,8 @@ const Preaching = observer(({ styles }) => {
     <div className={styles.grid}>
      <h1>证道主题</h1>
       <TextareaAutosize
-        placeholder="主题&#10;1.&#10;2.&#10;"
+        minRows={3}
+        placeholder="主题&#10;I.&#10;II.&#10;"
         className={styles.textarea}
         value={content}
         onChange={onChange}

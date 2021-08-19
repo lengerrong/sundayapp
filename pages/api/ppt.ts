@@ -2,7 +2,7 @@
 const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
-import { staffArrangeTitle } from '../../utils'
+import { staffArrangeTitle, convertToRoman } from '../../utils'
 //console.log(util.inspect(result, false, null))
 
 function unlinkCallback(err) {
@@ -51,7 +51,7 @@ async function updateStaffArrangements(pres, arrangements) {
     ['ls日', 'lsdailing','lssishi', 'lssiqing'],
     ['ts日', 'tsdailing','tssishi', 'tssiqing'],
     ['ns日', 'nsdailing','nssishi', 'nssiqing'],
-    ['nns日', 'nnssdailing','nnssishi', 'nnssiqing'],
+    ['nns日', 'nnsdailing','nnssishi', 'nnssiqing'],
   ]
   let keyholders = ['riqi', 'dailing', 'sishi', 'siqing']
   for (let i = 0; i < 4; i++) {
@@ -60,6 +60,40 @@ async function updateStaffArrangements(pres, arrangements) {
     }
   }
   updateSlideContent(pres, staffSlide, content)
+}
+
+async function updatePreachingArticle(pres, preachingArticle) {
+  let slide = await pres.getSlide(15)
+  let lines = preachingArticle.split('\n').filter(s => s && !/^\s*$/.test(s)).map(s => {
+    let i = s.indexOf('.')
+    if (i == -1) {
+      i = s.indexOf('。')
+    }
+    if (i != -1) {
+      s = s.substring(i+1)
+    }
+    s = s.trim()
+    return s
+  })
+
+  console.log(preachingArticle, lines)
+
+  if (lines.length >= 1) {
+    slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [ lines[0] ]
+    if (lines.length >= 2) {
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][1]['a:r'][1]['a:t'] = [ lines[1] ]
+    }
+    if (lines.length >= 3) {
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][2]['a:r'][1]['a:t'] = [ lines[2] ]
+    }
+    for (let i = 3; i < lines.length; i++) {
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'].push(JSON.parse(JSON.stringify(slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i-1]))); 
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][0]['a:t'] = [ convertToRoman(i) + '. ' ]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][1]['a:t'] = [ lines[i] ]
+    }
+    let slideKey = `ppt/slides/${slide.name}.xml`
+    pres.content[slideKey] = slide.content
+  }
 }
 
 export default async function handler(req, res) {
@@ -73,6 +107,7 @@ export default async function handler(req, res) {
   await pptx.compose(async pres => {
     await updateGoldenSentence(pres, req.body.goldensentence)
     await updateStaffArrangements(pres, req.body.staffArranges)
+    await updatePreachingArticle(pres, req.body.preachingArticle)
   });
 
   await pptx.save(tmpPPTX)
