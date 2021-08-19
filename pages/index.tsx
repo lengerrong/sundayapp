@@ -32,7 +32,7 @@ const Home = observer(({ styles }) => {
     staffArrangementStore
    } = stores
   
-  if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}") {
+  if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}" && global.window) {
     let sundays = []
     const now = new Date()
     sundays.push(new Date(now.setDate(now.getDate() - now.getDay())))
@@ -43,6 +43,9 @@ const Home = observer(({ styles }) => {
       .then(res => res.json())
       .then(staffArranges => {
         staffArrangementStore.setArrangements(staffArranges)
+      })
+      .catch(e => {
+        console.log(e)
       })
   }
 
@@ -58,6 +61,8 @@ const Home = observer(({ styles }) => {
       mode: 'same-origin',
       redirect: 'follow',
       referrer: 'no-referrer'
+    }).catch(e => {
+      console.log(e)
     })
   }
 
@@ -99,6 +104,9 @@ const Home = observer(({ styles }) => {
       link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}))
       link.remove()
       window.URL.revokeObjectURL(link.href)
+    })
+    .catch(e => {
+      console.error(e)
     })
   }
   
