@@ -59,7 +59,6 @@ async function setArrangements(req: NextApiRequest, res: NextApiResponse, mongod
 }
 
 const MongodbConnect = async (callback, req, res) => {
-    console.log(process.env.MONGODB_URL)
     const client = new MongoClient(process.env.MONGODB_URL, 
         { useNewUrlParser: true, useUnifiedTopology: true })
     try {
