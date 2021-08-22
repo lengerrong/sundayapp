@@ -68,6 +68,7 @@ async function updateReports(pres, reports, reportSlideNumber) {
       slideii.moveTo(ii + reportSlideNumber)
     }, 'slideLayout16')
   }
+  return count - 1
 }
 
 async function updateGoldenSentence(pres, goldensentence: ScriptureSection) {
@@ -105,7 +106,7 @@ async function updateStaffArrangements(pres, arrangements) {
 }
 
 async function updatePreachingArticle(pres, preachingArticle) {
-  let slide = await pres.getSlide(15)
+  let slide = await pres.getSlide(17)
   let lines = preachingArticle.split('\n').filter(s => s && !/^\s*$/.test(s)).map(s => {
     let i = s.indexOf('.')
     if (i == -1) {
@@ -140,7 +141,7 @@ async function updatePreachingArticle(pres, preachingArticle) {
 
 
 function getSongPosition(song) {
-  let postions = [3, 4, 10, 14, 16]
+  let postions = [3, 4, 10, 14, 18]
   return postions[song.position]
 }
 
@@ -169,11 +170,13 @@ async function insertSongs(pres, songs) {
   }
 }
 
+async function insertScriptures(pres, readingScriptures: ScriptureSection[], preachingScriptures: ScriptureSection[], newaddedslides: number) {
+  console.log('reading slide', 15 + newaddedslides)
+  console.log('preaching slide', 16 + newaddedslides)
+}
+
 export default async function handler(req, res) {
   console.log(req.body)
-  res.writeHead(200, {
-    'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-  })
   const tmpPPTX = '/tmp/worship' + Math.random() + '.pptx'
   try {
     let pptx = new PPTX.Composer()
@@ -185,13 +188,21 @@ export default async function handler(req, res) {
       await insertSongs(pres, req.body.songs.reverse())
       let newslidesbysongsbeforereports = req.body.songs.filter(song => song.position <= 2)
         .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
-      await updateReports(pres, req.body.reports, 12 + newslidesbysongsbeforereports)
+      let newaddedreports = await updateReports(pres, req.body.reports, 12 + newslidesbysongsbeforereports)
+      let newslidesbysongsbeforesanyisong = req.body.songs.filter(song => song.position <= 3)
+      .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
+      await insertScriptures(pres, req.body.readingScriptures, req.body.preachingScriptures, newaddedreports + newslidesbysongsbeforesanyisong)
     })
     await pptx.save(tmpPPTX)
   } catch (e) {
     console.error(e)
+    res.status(500).json({'stack': e.stack, 'reqbody':JSON.stringify(req.body)})
+    return
   }
-  var rs = fs.createReadStream(tmpPPTX)
+  res.writeHead(200, {
+    'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  })
+  let rs = fs.createReadStream(tmpPPTX)
   rs.on('error', (err) => errEnd(res, err, tmpPPTX))
   rs.on('finish', () => finishEnd(res, tmpPPTX))
   res.on('error', (err) => errEnd(res, err, tmpPPTX))

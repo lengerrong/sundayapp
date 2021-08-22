@@ -35,8 +35,12 @@ const Home = observer(({ styles }) => {
   } = stores
   const local = useLocalObservable(() => ({
     openSideBar: false,
+    errorMessage: null as unknown as string,
     setOpenSiderBar(openSideBar: boolean) {
       this.openSideBar = openSideBar
+    },
+    setErrorMessage(errorMessage: string) {
+      this.errorMessage = errorMessage
     }
   }))
   const shouldShowSideBar = () => {
@@ -101,8 +105,8 @@ const Home = observer(({ styles }) => {
       goldensentence: goldenSentenceStore.sentence,
       staffArranges: staffArrangementStore.arrangements,
       reports: reportMattersStore.content,
-      readingScriptures: readingSentenceStore.sentence,
-      preachingScriptures: preachingSentenceStore.sentence,
+      readingScriptures: readingSentenceStore.scriptureSections,
+      preachingScriptures: preachingSentenceStore.scriptureSections,
       preachingArticle: preachingArticleStore.content,
     }
 
@@ -118,7 +122,14 @@ const Home = observer(({ styles }) => {
       redirect: 'follow',
       referrer: 'no-referrer'
     })
-      .then(res => res.blob())
+      .then(async (res) => {
+        if (res.ok) {
+          return res.blob()
+        }
+        let body = await res.json()
+        console.error(body)
+        throw new Error(body.stack)
+      })
       .then(blob => {
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
@@ -128,8 +139,12 @@ const Home = observer(({ styles }) => {
         link.remove()
         window.URL.revokeObjectURL(link.href)
       })
-      .catch(e => {
+      .catch((e:Error) => {
         console.error(e)
+        if (e.message) {
+          local.setErrorMessage(e.message)
+          local.setOpenSiderBar(true)
+        }
       })
   }
   const handleSideBarClose = () => {
@@ -186,6 +201,11 @@ const Home = observer(({ styles }) => {
       </div>
       <Snackbar open={local.openSideBar} autoHideDuration={6000} onClose={handleSideBarClose}>
         <Alert onClose={handleSideBarClose} severity="error">
+          {local.errorMessage &&
+            <Typography variant="h5" component="h5">
+            {JSON.stringify(local.errorMessage)}
+            </Typography>
+          }
           {(!songsStore.songs || songsStore.songs.length <= 0) &&
             <Typography variant="h5" component="h5">
               请选择诗歌！！！
