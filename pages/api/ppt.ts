@@ -3,7 +3,8 @@ const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
 const xml2js = require('xml2js')
-import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex } from '../../utils'
+import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex, getScriptureSectionSubTitle, getScriptureSectionGoldenText } from '../../utils'
+import { ScriptureSection } from '../../common/scritpure.section'
 //console.log(util.inspect(result, false, null))
 
 const songlinexml = '<a:p><a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" rtl="0"><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="0"/></a:spcAft><a:buNone/></a:pPr><a:r><a:rPr lang="en" b="0" i="0" u="none" sz="2800" strike="noStrike" cap="none"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:latin typeface="Calibri"/><a:ea typeface="Calibri"/><a:cs typeface="Calibri"/><a:sym typeface="Calibri"/></a:rPr><a:t>placeholder</a:t></a:r><a:endParaRPr/></a:p>'
@@ -48,7 +49,7 @@ async function updateReports(pres, reports, reportSlideNumber) {
   let count = Math.ceil(lines.length / 9)
   let pages = []
   for (let i = 0; i < count; i++) {
-    pages.push(lines.slice(i*9, (i+1)*9))
+    pages.push(lines.slice(i * 9, (i + 1) * 9))
   }
   console.log(pages)
   let ocontent = JSON.stringify(slide.content)
@@ -61,22 +62,21 @@ async function updateReports(pres, reports, reportSlideNumber) {
     await pres.addSlide(async slideii => {
       slideii.content = JSON.parse(ocontent)
       await pushparagrahtoslide(slideii, pages[ii], 1, reportlinexml)
-      slideii.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [(1+ii) +  ' / ' + count]
+      slideii.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [(1 + ii) + ' / ' + count]
       let slideiiKey = `ppt/slides/${slideii.name}.xml`
       pres.content[slideiiKey] = slideii.content
-      slideii.moveTo(ii+reportSlideNumber)
+      slideii.moveTo(ii + reportSlideNumber)
     }, 'slideLayout16')
   }
 }
 
-async function updateGoldenSentence(pres, goldensentence) {
-  let scripture = goldensentence.scriptures[0];
-  let text = scripture[scripture.search].map(ss => ss.map(s => s.replace(/^\d+/, '')).join('')).join('')
+async function updateGoldenSentence(pres, goldensentence: ScriptureSection) {
   let goldenSentenceSlide = await pres.getSlide(10)
   let content = JSON.stringify(goldenSentenceSlide.content)
+  const text = getScriptureSectionGoldenText(goldensentence.scriptures[0])
   content = content.replace('我是葡萄树，你们是枝子。住在我里面的，我也住在他里面，他就结出很多果子；因为离开了我，你们就不能作甚么。', text)
-  content = content.replace('约翰福音', scripture.bookName)
-  content = content.replace('15:5', scripture.chapter)
+  content = content.replace('约翰福音', goldensentence.bookName)
+  content = content.replace('15:5', getScriptureSectionSubTitle(goldensentence))
   updateSlideContent(pres, goldenSentenceSlide, content)
 }
 
@@ -90,10 +90,10 @@ async function updateStaffArrangements(pres, arrangements) {
     return arrange
   })
   let placeholders = [
-    ['ls日', 'lsdailing','lssishi', 'lssiqing'],
-    ['ts日', 'tsdailing','tssishi', 'tssiqing'],
-    ['ns日', 'nsdailing','nssishi', 'nssiqing'],
-    ['nns日', 'nnsdailing','nnssishi', 'nnssiqing'],
+    ['ls日', 'lsdailing', 'lssishi', 'lssiqing'],
+    ['ts日', 'tsdailing', 'tssishi', 'tssiqing'],
+    ['ns日', 'nsdailing', 'nssishi', 'nssiqing'],
+    ['nns日', 'nnsdailing', 'nnssishi', 'nnssiqing'],
   ]
   let keyholders = ['riqi', 'dailing', 'sishi', 'siqing']
   for (let i = 0; i < 4; i++) {
@@ -112,7 +112,7 @@ async function updatePreachingArticle(pres, preachingArticle) {
       i = s.indexOf('。')
     }
     if (i != -1) {
-      s = s.substring(i+1)
+      s = s.substring(i + 1)
     }
     s = s.trim()
     return s
@@ -121,17 +121,17 @@ async function updatePreachingArticle(pres, preachingArticle) {
   console.log(preachingArticle, lines)
 
   if (lines.length >= 1) {
-    slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [ lines[0] ]
+    slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [lines[0]]
     if (lines.length >= 2) {
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][1]['a:r'][1]['a:t'] = [ lines[1] ]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][1]['a:r'][1]['a:t'] = [lines[1]]
     }
     if (lines.length >= 3) {
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][2]['a:r'][1]['a:t'] = [ lines[2] ]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][2]['a:r'][1]['a:t'] = [lines[2]]
     }
     for (let i = 3; i < lines.length; i++) {
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'].push(JSON.parse(JSON.stringify(slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i-1]))); 
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][0]['a:t'] = [ convertToRoman(i) + '. ' ]
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][1]['a:t'] = [ lines[i] ]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'].push(JSON.parse(JSON.stringify(slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i - 1])));
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][0]['a:t'] = [convertToRoman(i) + '. ']
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][i]['a:r'][1]['a:t'] = [lines[i]]
     }
     let slideKey = `ppt/slides/${slide.name}.xml`
     pres.content[slideKey] = slide.content
@@ -149,9 +149,9 @@ async function insertSong(pres, song, template) {
   for (let index in song.verses) {
     await pres.addSlide(async slide => {
       slide.content = JSON.parse(template)
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][0]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [ getSongTitle(song) ]
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [ getSongVerseTitle(song, index) ]
-      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [ getSongVerseIndex(song, index) ]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][0]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [getSongTitle(song)]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][1]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [getSongVerseTitle(song, index)]
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [getSongVerseIndex(song, index)]
       await pushparagrahtoslide(slide, getSongVerse(song, index).split('\r\n'), 3, songlinexml)
       let slideKey = `ppt/slides/${slide.name}.xml`
       pres.content[slideKey] = slide.content
@@ -174,20 +174,23 @@ export default async function handler(req, res) {
   res.writeHead(200, {
     'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
   })
-  let pptx = new PPTX.Composer()
-  await pptx.load(__dirname + '/../../templates/worship.pptx')
   const tmpPPTX = '/tmp/worship' + Math.random() + '.pptx'
-  await pptx.compose(async pres => {
-    await updateGoldenSentence(pres, req.body.goldensentence)
-    await updateStaffArrangements(pres, req.body.staffArranges)
-    await updatePreachingArticle(pres, req.body.preachingArticle)
-    await insertSongs(pres, req.body.songs.reverse())
-    let newslidesbysongsbeforereports = req.body.songs.filter(song => song.position <= 2)
-      .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
-    await updateReports(pres, req.body.reports, 12 + newslidesbysongsbeforereports)
-  })
-
-  await pptx.save(tmpPPTX)
+  try {
+    let pptx = new PPTX.Composer()
+    await pptx.load(__dirname + '/../../templates/worship.pptx')
+    await pptx.compose(async pres => {
+      await updateGoldenSentence(pres, req.body.goldensentence)
+      await updateStaffArrangements(pres, req.body.staffArranges)
+      await updatePreachingArticle(pres, req.body.preachingArticle)
+      await insertSongs(pres, req.body.songs.reverse())
+      let newslidesbysongsbeforereports = req.body.songs.filter(song => song.position <= 2)
+        .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
+      await updateReports(pres, req.body.reports, 12 + newslidesbysongsbeforereports)
+    })
+    await pptx.save(tmpPPTX)
+  } catch (e) {
+    console.error(e)
+  }
   var rs = fs.createReadStream(tmpPPTX)
   rs.on('error', (err) => errEnd(res, err, tmpPPTX))
   rs.on('finish', () => finishEnd(res, tmpPPTX))

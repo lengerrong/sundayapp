@@ -127,3 +127,10 @@ const romanMatrix: [number, string][]= [
     }
     return scritpure.verses.join('\n')
   }
+
+  export function getScriptureSectionGoldenText(scritpure: Scripture) {
+    if (!scritpure) {
+      return ''
+    }
+    return scritpure.verses.map(v => v.replace(/^\d+/, '')).join('')
+  }

@@ -197,13 +197,13 @@ const Home = observer(({ styles }) => {
             </Typography>
           }
           {(!staffArrangementStore.arrangements || staffArrangementStore.arrangements.length <= 0 ||
-            staffArrangementStore.arrangements.map(arrange => {delete arrange.riqi; return arrange})
+            staffArrangementStore.arrangements.map(arrange => {let a = {...arrange}; delete a.riqi; return a})
               .filter(arrange => JSON.stringify(arrange) !== '{}').length <= 0) &&
             <Typography variant="h5" component="h5">
               请安排事奉人员！！！
             </Typography>
           }
-          {(reportMattersStore.content || reportMattersStore.content.length <= 0) &&
+          {(!reportMattersStore.content || reportMattersStore.content.length <= 0) &&
             <Typography variant="h5" component="h5">
               请输入报告事项！！！
             </Typography>
