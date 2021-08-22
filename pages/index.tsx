@@ -3,7 +3,7 @@ import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer } from 'mobx-react-lite'
 import stores from '../stores'
-import { getSongLable, staffArrangeTitle } from '../utils'
+import { getSongLable, staffArrangeTitle, getScriptureSectionTitle } from '../utils'
 
 const CardLink = ({ href, text, children }) => {
   return <Link href={href} >
@@ -128,7 +128,7 @@ const Home = observer(({ styles }) => {
       </div>
       <div className={styles.card}>
         <CardLink href='/goldensentence' text='本周金句 →' >
-          <span className={styles.golden}>{goldenSentenceStore.sentence.search}</span>
+          <span className={styles.golden}>{getScriptureSectionTitle(goldenSentenceStore.sentence)}</span>
         </CardLink>
       </div>
       <div className={styles.card}>

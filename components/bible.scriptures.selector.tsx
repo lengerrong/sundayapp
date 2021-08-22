@@ -6,7 +6,7 @@ import { List, ListItem, Switch, ListItemAvatar } from '@material-ui/core'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Checkbox from '@material-ui/core/Checkbox'
-import { Book } from './book'
+import { Book } from '../common/book'
 import BibleVolumeChapterSelector from './bible.volume.chatper.selector'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,7 +75,12 @@ const VersesSelector = observer(({ book, onScritpuresSelected }: BookProps) => {
     const onOk = () => {
         console.log('selected ', local.checked.map(index => local.verses[index]),
             ' from ', book.bookName, ' chapter ', book.bookChapterIndex)
-        onScritpuresSelected && onScritpuresSelected(book, local.checked.map(index => local.verses[index]))
+        let verses = local.checked.map(index => local.verses[index])
+        if (verses.length <= 0) {
+            alert('请至少选择一节经文!')
+            return
+        }
+        onScritpuresSelected && onScritpuresSelected(book, verses)
     }
     const onCancel = () => {
         local.setChecked([])

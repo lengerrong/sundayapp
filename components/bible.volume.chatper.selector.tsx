@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Slide from '@material-ui/core/Slide';
 import { useLocalObservable, observer } from 'mobx-react-lite'
-import { Book } from './book'
+import { Book } from '../common/book'
 import { CardContent, Typography, Card } from '@material-ui/core'
 
 const cnvs = require('../pages/api/scriptures/cnvs/bible.json')
@@ -15,12 +15,21 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             flexGrow: 1,
         },
-        card: {
-            border: 'thick double #32a1ce'
+        volumnCard: {
+            border: 'thick double #32a1ce',
+            minWidth: '100px',
+            minHeight: '120px'
         },
-        focusCard: {
+        chapterCard: {
+            border: 'thick double #32a1ce',
+            minWidth: '40px',
+            minHeight: '40px'
+        },
+        focusVolumnCard: {
             border: 'thick double red',
-            color: 'red'
+            color: 'red',
+            minWidth: '100px',
+            minHeight: '120px'
         }
     }),
 )
@@ -42,24 +51,45 @@ interface VolumnsProps {
 
 function Volumns({ currentBook, onVolumnClick }: VolumnsProps) {
     const classes = useStyles()
-    return <Grid container>
-        {
-            cnvs.data[0].booksList.map((book: Book) => {
-                return <Grid item xs={3} onClick={() => onVolumnClick(book)}>
-                    <Card className={(book.bookName === currentBook.bookName ? classes.focusCard : classes.card)}>
-                        <CardContent>
-                            <Typography>
-                                {book.bookAbbrName}
-                            </Typography>
-                            <Typography>
-                                {book.bookName}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            })
-        }
-    </Grid>
+
+    const renderBookList = (booksList: Book[]) => {
+        return <>
+            {
+                booksList.map((book: Book) => {
+                    return <Grid key={book.bookName} item xs={3} onClick={() => onVolumnClick(book)}>
+                        <Card className={(book.bookName === currentBook.bookName ? classes.focusVolumnCard : classes.volumnCard)}>
+                            <CardContent>
+                                <Typography>
+                                    {book.bookAbbrName}
+                                </Typography>
+                                <Typography>
+                                    {book.bookName}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                })
+            }
+        </>
+
+    }
+
+    console.log(cnvs.data[0].booksList)
+    console.log(cnvs.data[1].booksList)
+    return <>
+        <Typography variant="h3" component="h3">
+            旧约
+        </Typography>
+        <Grid container>
+            {renderBookList(cnvs.data[0].booksList)}
+        </Grid>
+        <Typography variant="h3" component="h3">
+            新约
+        </Typography>
+        <Grid container>
+            {renderBookList(cnvs.data[1].booksList)}
+        </Grid>
+    </>
 }
 
 const range = (start: number, stop: number, step: number) =>
@@ -74,8 +104,8 @@ function Chapters({ book, onChapterClick }: ChaptersProps) {
     const classes = useStyles()
     return <Grid container>
         {range(1, book.bookChapterMaxNumber, 1).map(index => {
-            return <Grid item xs={1} onClick={() => onChapterClick(index)}>
-                <Card className={classes.card}>
+            return <Grid item xs={2} onClick={() => onChapterClick(index)}>
+                <Card className={classes.chapterCard}>
                     <CardContent>
                         <Typography>{index}</Typography>
                     </CardContent>
