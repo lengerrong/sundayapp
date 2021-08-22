@@ -20,13 +20,14 @@ const GoldenSentence = observer(({ styles }) => {
     local.setOpen(false)
   }
   const onScripturesSelected = (book: Book, verses: string[]) => {
-    console.log(verses)
-    goldenSentenceStore.setSentence({
-      bookName: book.bookName, scriptures: [{
-        chapterIndex: book.bookChapterIndex!,
-        verses
-      }]
-    })
+    if (verses && verses.length > 0) {
+      goldenSentenceStore.setSentence({
+        bookName: book.bookName, scriptures: [{
+          chapterIndex: book.bookChapterIndex!,
+          verses
+        }]
+      })
+    }
     onClose()
   }
   const title = getScriptureSectionTitle(sentence)

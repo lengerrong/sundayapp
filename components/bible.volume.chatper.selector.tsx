@@ -13,7 +13,7 @@ const cnvs = require('../pages/api/scriptures/cnvs/bible.json')
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            flexGrow: 1,
+            flexGrow: 1
         },
         volumnCard: {
             border: 'thick double #32a1ce',
