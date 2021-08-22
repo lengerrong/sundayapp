@@ -1,9 +1,11 @@
-import { Button, ButtonGroup, Chip, TextareaAutosize } from '@material-ui/core'
+import { Button, ButtonGroup, Chip, TextareaAutosize, Snackbar, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
-import { observer } from 'mobx-react-lite'
+import { observer, useLocalObservable } from 'mobx-react-lite'
 import stores from '../stores'
-import { getSongLable, staffArrangeTitle, getScriptureSectionTitle } from '../utils'
+import { getSongLable, staffArrangeTitle, getScriptureSectionTitle, getScriptureSectionsTitle } from '../utils'
+import Alert from '../components/alert'
+import { useEffect } from 'react'
 
 const CardLink = ({ href, text, children }) => {
   return <Link href={href} >
@@ -26,29 +28,45 @@ const getYYMMDD = (date: Date) => {
 }
 
 const Home = observer(({ styles }) => {
-  const { songsStore, goldenSentenceStore, 
+  const { songsStore, goldenSentenceStore,
     preachingSentenceStore, readingSentenceStore,
     preachingArticleStore, reportMattersStore,
     staffArrangementStore
-   } = stores
-  
-  if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}" && global.window) {
-    let sundays = []
-    const now = new Date()
-    sundays.push(new Date(now.setDate(now.getDate() - now.getDay())))
-    sundays.push(new Date(now.setDate(now.getDate() + 7)))
-    sundays.push(new Date(now.setDate(now.getDate() + 7)))
-    sundays.push(new Date(now.setDate(now.getDate() + 7)))
-    fetch('/api/minster?dates=' + sundays.map(sunday => getYYMMDD(sunday)).join(','))
-      .then(res => res.json())
-      .then(staffArranges => {
-        staffArrangementStore.setArrangements(staffArranges)
-      })
-      .catch(e => {
-        console.log(e)
-      })
+  } = stores
+  const local = useLocalObservable(() => ({
+    openSideBar: false,
+    setOpenSiderBar(openSideBar: boolean) {
+      this.openSideBar = openSideBar
+    }
+  }))
+  const shouldShowSideBar = () => {
+    return !songsStore.songs || songsStore.songs.length <= 0 ||
+      !goldenSentenceStore.sentence || !goldenSentenceStore.sentence.scriptures || goldenSentenceStore.sentence.scriptures.length <= 0 ||
+      !staffArrangementStore.arrangements || staffArrangementStore.arrangements.length <= 0 ||
+      !reportMattersStore.content || reportMattersStore.content.length <= 0 ||
+      !readingSentenceStore.scriptureSections || readingSentenceStore.scriptureSections.length <= 0 ||
+      !preachingSentenceStore.scriptureSections || preachingSentenceStore.scriptureSections.length <= 0 ||
+      !preachingArticleStore.content || preachingArticleStore.content.length <= 0
   }
-
+  useEffect(() => {
+    if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}") {
+      let sundays = []
+      const now = new Date()
+      sundays.push(new Date(now.setDate(now.getDate() - now.getDay())))
+      sundays.push(new Date(now.setDate(now.getDate() + 7)))
+      sundays.push(new Date(now.setDate(now.getDate() + 7)))
+      sundays.push(new Date(now.setDate(now.getDate() + 7)))
+      fetch('/api/minster?dates=' + sundays.map(sunday => getYYMMDD(sunday)).join(','))
+        .then(res => res.json())
+        .then(staffArranges => {
+          staffArrangementStore.setArrangements(staffArranges)
+        })
+        .catch(e => {
+          console.log(e)
+          staffArrangementStore.setArrangements(sundays.map(sunday => ({riqi: getYYMMDD(sunday)})))
+        })
+    }
+  }, [])
   const saveStaffArranges = () => {
     fetch('/api/minster', {
       body: JSON.stringify(staffArrangementStore.arrangements), // must match 'Content-Type' header
@@ -73,6 +91,10 @@ const Home = observer(({ styles }) => {
   }
 
   const generatePPT = () => {
+    if (shouldShowSideBar()) {
+      local.setOpenSiderBar(true)
+      return
+    }
     saveStaffArranges()
     let pptParameters = {
       songs: songsStore.songs,
@@ -83,6 +105,7 @@ const Home = observer(({ styles }) => {
       preachingScriptures: preachingSentenceStore.sentence,
       preachingArticle: preachingArticleStore.content,
     }
+
     fetch('/api/ppt', {
       body: JSON.stringify(pptParameters), // must match 'Content-Type' header
       cache: 'no-cache',
@@ -95,69 +118,113 @@ const Home = observer(({ styles }) => {
       redirect: 'follow',
       referrer: 'no-referrer'
     })
-    .then( res => res.blob() )
-    .then( blob => {
-      let link = document.createElement('a')
-      link.href = window.URL.createObjectURL(blob)
-      link.download = getThisSundayYYMMDD() + '敬拜唱诗.pptx'
-      document.body.appendChild(link)
-      link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}))
-      link.remove()
-      window.URL.revokeObjectURL(link.href)
-    })
-    .catch(e => {
-      console.error(e)
-    })
+      .then(res => res.blob())
+      .then(blob => {
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = getThisSundayYYMMDD() + '敬拜唱诗.pptx'
+        document.body.appendChild(link)
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
+        link.remove()
+        window.URL.revokeObjectURL(link.href)
+      })
+      .catch(e => {
+        console.error(e)
+      })
   }
-  
+  const handleSideBarClose = () => {
+    local.setOpenSiderBar(false)
+  }
   return (
     <>
-    <div className={styles.grid}>
-      <div className={styles.card}>
-        <CardLink href='/songs' text='诗歌 →'>
-          {songsStore.songs.map((song, index) => (
-             <Chip
-                  key={getSongLable(song)+index}
-                  className={styles.chip}
-                  color='second'
-                  icon={<LibraryMusicIcon />}
-                  label={getSongLable(song)}
-                />))
-          }
-        </CardLink>
+      <div className={styles.grid}>
+        <div className={styles.card}>
+          <CardLink href='/songs' text='诗歌 →'>
+            {songsStore.songs.map((song, index) => (
+              <Chip
+                key={getSongLable(song) + index}
+                className={styles.chip}
+                color='secondary'
+                icon={<LibraryMusicIcon />}
+                label={getSongLable(song)}
+              />))
+            }
+          </CardLink>
+        </div>
+        <div className={styles.card}>
+          <CardLink href='/goldensentence' text='本周金句 →' >
+            <span className={styles.golden}>{getScriptureSectionTitle(goldenSentenceStore.sentence)}</span>
+          </CardLink>
+        </div>
+        <div className={styles.card}>
+          <CardLink href='/minister' text={staffArrangeTitle(staffArrangementStore.arrangements) + '月份事奉人员 →'} >
+          </CardLink>
+        </div>
+        <div className={styles.card}>
+          <CardLink href='/report' text='报告事项 →' >
+            <pre>{reportMattersStore.content}</pre>
+          </CardLink>
+        </div>
+        <div className={styles.card}>
+          <CardLink href='/scriptures' text='阅读经文、证道经文 →' >
+            {readingSentenceStore.scriptureSections && readingSentenceStore.scriptureSections.length > 0 &&
+              <p>阅读经文：<span className={styles.reading}>{getScriptureSectionsTitle(readingSentenceStore.scriptureSections)}</span></p>}
+            {preachingSentenceStore.scriptureSections && preachingSentenceStore.scriptureSections.length > 0 &&
+              <p>证道经文：<span className={styles.preaching}>{getScriptureSectionsTitle(preachingSentenceStore.scriptureSections)}</span></p>}
+          </CardLink>
+        </div>
+        <div className={styles.card}>
+          <CardLink href='/preaching' text='证道主题 →' >
+            <pre>{preachingArticleStore.content}</pre>
+          </CardLink>
+        </div>
       </div>
-      <div className={styles.card}>
-        <CardLink href='/goldensentence' text='本周金句 →' >
-          <span className={styles.golden}>{getScriptureSectionTitle(goldenSentenceStore.sentence)}</span>
-        </CardLink>
-      </div>
-      <div className={styles.card}>
-        <CardLink href='/minister' text={staffArrangeTitle(staffArrangementStore.arrangements) + '月份事奉人员 →'} >
-        </CardLink>
-      </div>
-      <div className={styles.card}>
-        <CardLink href='/report' text='报告事项 →' >
-          <pre>{reportMattersStore.content}</pre>
-        </CardLink>
-      </div>
-      <div className={styles.card}>
-        <CardLink href='/scriptures' text='阅读经文、证道经文 →' >
-          {readingSentenceStore.sentence.search && <p>阅读经文：<span className={styles.reading}>{readingSentenceStore.sentence.search}</span></p>}
-          {preachingSentenceStore.sentence.search && <p>证道经文：<span className={styles.preaching}>{preachingSentenceStore.sentence.search}</span></p>}
-        </CardLink>
-      </div>
-      <div className={styles.card}>
-        <CardLink href='/preaching' text='证道主题 →' >
-          <pre>{preachingArticleStore.content}</pre>
-        </CardLink>
-      </div>
-    </div>
-    <div className={styles.buttongroup} >
-          <ButtonGroup variant='contained' color='primary' size='large'>
+      <div className={styles.buttongroup} >
+        <ButtonGroup variant='contained' color='primary' size='large'>
           <Button onClick={generatePPT}>生成PPT</Button>
-          <Button >生成PDF</Button>
         </ButtonGroup>
-    </div>
+      </div>
+      <Snackbar open={local.openSideBar} autoHideDuration={6000} onClose={handleSideBarClose}>
+        <Alert onClose={handleSideBarClose} severity="error">
+          {(!songsStore.songs || songsStore.songs.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请选择诗歌！！！
+            </Typography>
+          }
+          {(!goldenSentenceStore.sentence || !goldenSentenceStore.sentence.scriptures || goldenSentenceStore.sentence.scriptures.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请选择本周金句！！！
+            </Typography>
+          }
+          {(!staffArrangementStore.arrangements || staffArrangementStore.arrangements.length <= 0 ||
+            staffArrangementStore.arrangements.map(arrange => {delete arrange.riqi; return arrange})
+              .filter(arrange => JSON.stringify(arrange) !== '{}').length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请安排事奉人员！！！
+            </Typography>
+          }
+          {(reportMattersStore.content || reportMattersStore.content.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请输入报告事项！！！
+            </Typography>
+          }
+          {(!readingSentenceStore.scriptureSections || readingSentenceStore.scriptureSections.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请添加阅读经文！！！
+            </Typography>
+          }
+          {(!preachingSentenceStore.scriptureSections || preachingSentenceStore.scriptureSections.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请添加证道经文！！！
+            </Typography>
+          }
+          {(!preachingArticleStore.content || preachingArticleStore.content.length <= 0) &&
+            <Typography variant="h5" component="h5">
+              请输入证道主题！！！
+            </Typography>
+          }
+        </Alert>
+      </Snackbar>
     </>
   )
 })

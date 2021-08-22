@@ -52,9 +52,9 @@ const VersesSelector = observer(({ book, onScritpuresSelected, verses }: BookPro
         local.setChecked(newChecked)
     }
     const onOk = () => {
-        console.log('selected ', local.checked.map(index => verses[index]),
-            ' from ', book.bookName, ' chapter ', book.bookChapterIndex)
-        let selected_verses = local.checked.map(index => verses[index])
+        let selected = Array.from(local.checked)
+        selected.sort((a, b) => a - b)
+        let selected_verses = selected.map(index => verses[index])
         if (selected_verses.length <= 0) {
             alert('请至少选择一节经文!')
             return
@@ -77,7 +77,7 @@ const VersesSelector = observer(({ book, onScritpuresSelected, verses }: BookPro
             </ListItem>
         </List>
         <List component="nav" aria-label="secondary scriptures">
-            {verses.map((verse, index) => <ListItem key={verse} button>
+            {verses.map((verse, index) => <ListItem key={verse} button onClick={() => handleToggle(index)}>
                 <ListItemText id={getLabelId(index)} primary={verse} classes={{
                     primary: classes.scripture
                 }}/>

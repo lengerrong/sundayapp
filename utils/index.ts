@@ -98,20 +98,27 @@ const romanMatrix: [number, string][]= [
     return indexsToString(indexs)
   }
 
-  export function getScriptureSectionSubTitle(sentence: ScriptureSection) {
-    if (!sentence.scriptures) {
+  export function getScriptureSectionSubTitle(ScriptureSection: ScriptureSection) {
+    if (!ScriptureSection.scriptures) {
       return ''
     }
-    return sentence.scriptures.map(s => {
+    return ScriptureSection.scriptures.map(s => {
       return s.chapterIndex.toString() + ':' + getVersesIndexString(s.verses)
-    }).join('|')
+    }).join(';')
   }
 
-  export function getScriptureSectionTitle(sentence: ScriptureSection) {
-    if (!sentence) {
+  export function getScriptureSectionTitle(ScriptureSection: ScriptureSection) {
+    if (!ScriptureSection) {
       return null
     }
-    return sentence.bookName + getScriptureSectionSubTitle(sentence)
+    return ScriptureSection.bookName + getScriptureSectionSubTitle(ScriptureSection)
+  }
+
+  export function getScriptureSectionsTitle(ScriptureSections: ScriptureSection[]) {
+    if (!ScriptureSections) {
+      return null
+    }
+    return ScriptureSections.map(getScriptureSectionTitle).join('|')
   }
 
   export function getScriptureSectionText(scritpure: Scripture) {

@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
+import { ScriptureSection } from '../common/scritpure.section'
 
 const readingSentenceStore = makeAutoObservable({
-    sentence: {},
-    setSentence(sentence) {
-        this.sentence = sentence
+    scriptureSections: [] as ScriptureSection[],
+    setScriptureSections(scriptureSections: ScriptureSection[]) {
+        this.scriptureSections = scriptureSections
     }
 })
 

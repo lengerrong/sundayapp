@@ -1,9 +1,9 @@
 import { observer, useLocalObservable } from 'mobx-react-lite'
-import goldenSentenceStore from '../../stores/golden.sentence.store';
-import { Typography, Dialog, DialogContent, Button, Card } from '@material-ui/core';
-import BibleScripturesSelector from '../../components/bible.scriptures.selector';
-import { Book } from '../../common/book';
-import { getScriptureSectionTitle, getScriptureSectionText } from '../../utils';
+import goldenSentenceStore from '../../stores/golden.sentence.store'
+import { Typography, Dialog, DialogContent, Button, Card } from '@material-ui/core'
+import BibleScripturesSelector from '../../components/bible.scriptures.selector'
+import { Book } from '../../common/book'
+import { getScriptureSectionTitle, getScriptureSectionText } from '../../utils'
 
 const GoldenSentence = observer(({ styles }) => {
   const { sentence } = goldenSentenceStore

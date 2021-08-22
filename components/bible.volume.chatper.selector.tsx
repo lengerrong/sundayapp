@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import Slide from '@material-ui/core/Slide';
+import Slide from '@material-ui/core/Slide'
 import { useLocalObservable, observer } from 'mobx-react-lite'
 import { Book } from '../common/book'
 import { CardContent, Typography, Card } from '@material-ui/core'
@@ -73,9 +73,6 @@ function Volumns({ currentBook, onVolumnClick }: VolumnsProps) {
         </>
 
     }
-
-    console.log(cnvs.data[0].booksList)
-    console.log(cnvs.data[1].booksList)
     return <>
         <Typography variant="h3" component="h3">
             旧约
@@ -160,7 +157,6 @@ const BibleVolumeChapterSelector = observer(({ onVolumeChapterSelected }: BibleV
         }
     }
     const onChapterClick = (bookChapterIndex: number) => {
-        console.log(onVolumeChapterSelected)
         onVolumeChapterSelected && onVolumeChapterSelected({ ...local.book, bookChapterIndex })
     }
     const onVolumnClick = (book: Book) => {
