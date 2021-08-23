@@ -1,9 +1,11 @@
+import { Book } from "../../../common/book"
+
 const cnvs = require('./cnvs/bible.json')
 const path = require('path')
 const fs = require('fs')
 
 function getScripturesByVolume(book) {
-    let scriptures = []
+    let scriptures:any[] = []
     for (let i = 1; i <= book.bookChapterMaxNumber; i++) {
         const chapterPath = ('../../cnvs/' + book.canon + '/' + book.bookUsfm + '/' + i).toLowerCase()
         let chapterContent = fs.readFileSync(path.join(__dirname, chapterPath), { encoding: 'utf8', flag: 'r' })
@@ -31,7 +33,7 @@ function getScriptures({ search }) {
         return null
     }
     const volume = m[1]
-    let book = null
+    let book:Book = null as unknown as Book
     for (let i = 0; i < 2; i++) {
         book = cnvs.data[i].booksList.find(e => e.bookName === volume || e.bookAbbrName === volume)
         if (book) {
@@ -44,18 +46,18 @@ function getScriptures({ search }) {
     if (!m[2]) {
         let r = {}
         r[search] = getScripturesByVolume(book)
-        r.bookName = book.bookName
-        r.chapter = '全卷'
-        r.search = search
+        r['bookName'] = book.bookName
+        r['chapter'] = '全卷'
+        r['search'] = search
         return r
     }
     const chapters = m[2].split(';')
     if (chapters.length <= 0) {
         let r = {}
         r[search] = getScripturesByVolume(book)
-        r.bookName = book.bookName
-        r.search = search
-        r.chapter = '全卷'
+        r['bookName'] = book.bookName
+        r['search'] = search
+        r['chapter'] = '全卷'
         return r
     }
     const chapterSectionsArray = chapters.map(chapter => {
@@ -70,7 +72,7 @@ function getScriptures({ search }) {
         }
         return null
     }).filter(e => e != null)
-    let scriptures = []
+    let scriptures:any[] = []
     for (const chapterIndexSections of chapterSectionsArray) {
         const { chapterIndex, sections } = chapterIndexSections
         if (chapterIndex > book.bookChapterMaxNumber) {
@@ -79,7 +81,7 @@ function getScriptures({ search }) {
         const chapterPath = ('../../cnvs/' + book.canon + '/' + book.bookUsfm + '/' + chapterIndex).toLowerCase()
         let chapterContent = fs.readFileSync(path.join(__dirname, chapterPath), { encoding: 'utf8', flag: 'r' })
         chapterContent = chapterContent.split('\n')
-        let sectionScriptures = []
+        let sectionScriptures: any[] = []
         if (sections.length <= 0) {
             sectionScriptures = chapterContent
         } else {
@@ -113,9 +115,9 @@ function getScriptures({ search }) {
     }
     let r = {}
     r[search] = scriptures
-    r.bookName = book.bookName
-    r.chapter = m[2]
-    r.search = search
+    r['bookName'] = book.bookName
+    r['chapter'] = m[2]
+    r['search'] = search
     return r
 }
 

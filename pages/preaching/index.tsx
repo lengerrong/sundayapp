@@ -1,8 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { TextareaAutosize } from '@material-ui/core'
 import preachingArticleStore from '../../stores/preaching.article.store'
-
-const Preaching = observer(({ styles }) => {
+interface PreachingProps {
+  styles: any
+}
+const Preaching = observer(({ styles }: PreachingProps) => {
   const { content } = preachingArticleStore
   const onChange = (e) => {
     preachingArticleStore.setContent(e.target.value)

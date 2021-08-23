@@ -1,9 +1,10 @@
-import Link from 'next/link'
 import { observer } from 'mobx-react-lite'
 import { TextareaAutosize } from '@material-ui/core'
 import reportMattersStore from '../../stores/report.matters.store'
-
-const Report = observer(({ styles }) => {
+interface ReportProps {
+  styles: any
+}
+const Report = observer(({ styles }: ReportProps) => {
   const { content } = reportMattersStore;
   const onChange = (e) => {
       reportMattersStore.setContent(e.target.value)

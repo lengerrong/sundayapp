@@ -40,15 +40,15 @@ const defaultSections = []
 export default function SongSelect({onSongSelect}) {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
-    const [type, setType] = React.useState<number | string>(defaultType)
-    const [index, setIndex] = React.useState<number | string>(defaultIndex)
-    const [sections, setSections] = React.useState<[number]>(defaultSections)
+    const [type, setType] = React.useState<number>(defaultType)
+    const [index, setIndex] = React.useState<number>(defaultIndex)
+    const [sections, setSections] = React.useState<number[]>(defaultSections)
     const maxIndex = type == defaultType ? psalms.length : hymns.length
     const songIndexLabel = '第' + index + '首'
     const sectionsLabel = '第' + sections + '节'
     const song = songs[type-1][index-1]
     const onTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setType(Number(event.target.value) || '')
+        setType(Number(event.target.value))
         if (event.target.value == 1 && index > hymns.length) {
             setIndex(1)
         }
@@ -67,7 +67,7 @@ export default function SongSelect({onSongSelect}) {
     }
 
     const onSectionsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSections(event.target.value)
+        setSections(event.target.value as number[])
     }
 
     const handleClickOpen = () => {

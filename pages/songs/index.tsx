@@ -9,12 +9,16 @@ import { Chip, Divider, Grid } from '@material-ui/core'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import DragMoveDrop from '../../components/drag.move.drop'
 import { getSongLable } from '../../utils'
+import { Song } from '../../common/song'
 
-const Songs = observer(({ styles }) => {
-  const [currentSong, setCurrentSong] = React.useState({})
+interface SongsProps {
+  styles: any
+}
+const Songs = observer(({ styles }: SongsProps) => {
+  const [currentSong, setCurrentSong] = React.useState({} as Song)
   const { songs } = songsStore
   const onSongSelect = (selectedSong, position) => {
-    let newSongs = Array.from(songs)
+    let newSongs:Song[] = Array.from(songs)
     newSongs.push({ ...selectedSong, position })
     songsStore.setSongs(newSongs)
     selectedSong.arrayIndex = newSongs.length - 1
@@ -28,7 +32,7 @@ const Songs = observer(({ styles }) => {
   const onDeleteSong = (song) => {
     let newSongs = Array.from(songs)
     newSongs.splice(song.arrayIndex, 1)
-    setCurrentSong(newSongs.length >= 1 ? {...newSongs[0], arrayIndex:0} : {})
+    setCurrentSong(newSongs.length >= 1 ? {...newSongs[0], arrayIndex:0} : {} as Song)
     songsStore.setSongs(newSongs)
   }
   const SongChip = (song) => {
@@ -38,7 +42,7 @@ const Songs = observer(({ styles }) => {
         key={songLabel + song.arrayIndex}
         className={styles.chip}
         clickable
-        color={song.arrayIndex === currentSong.arrayIndex ? 'primary':'second'}
+        color={song.arrayIndex === currentSong.arrayIndex ? 'primary':'secondary'}
         icon={<LibraryMusicIcon />}
         label={songLabel}
         onClick={() => onSongClick(song)}

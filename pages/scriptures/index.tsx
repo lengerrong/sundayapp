@@ -7,14 +7,15 @@ import { Book } from '../../common/book'
 import { ScriptureSection } from '../../common/scritpure.section'
 import { getScriptureSectionTitle } from '../../utils'
 import Alert from '../../components/alert'
-
 enum ScriptureType {
   None,
   ReadingScripture,
   PreachingScripture
 }
-
-const Scriptures = observer(({ styles }) => {
+interface ScripturesProps {
+  styles: any
+}
+const Scriptures = observer(({ styles }: ScripturesProps) => {
   const local = useLocalObservable(() => ({
     open: false,
     scriptureType: ScriptureType.None,
@@ -71,11 +72,10 @@ const Scriptures = observer(({ styles }) => {
     store.setScriptureSections(newscriptureSections)
   }
   const renderScriptureSection = (scriptureSection: ScriptureSection, scriptureType: ScriptureType) => {
-    return <ListItem key={getScriptureSectionTitle(scriptureSection) + scriptureType} button>
+    return <ListItem key={getScriptureSectionTitle(scriptureSection)} button>
       <Chip clickable label={getScriptureSectionTitle(scriptureSection)}
         onClick={() => onScriptureSectionClick(scriptureSection)}
-        onDelete={() => onDeleteScriptureSection(scriptureSection, scriptureType)}>
-      </Chip>
+        onDelete={() => onDeleteScriptureSection(scriptureSection, scriptureType)} />
     </ListItem>
   }
   const handleSideBarClose = () => {
@@ -114,7 +114,7 @@ const Scriptures = observer(({ styles }) => {
             local.scriptureSection && local.scriptureSection.scriptures &&
             local.scriptureSection.scriptures.map(scripture => {
               return scripture.verses.map(verse => {
-                return <Typography variant="h5" component="h5">
+                return <Typography key={verse} variant="h5" component="h5">
                   {verse}
                 </Typography>
               })

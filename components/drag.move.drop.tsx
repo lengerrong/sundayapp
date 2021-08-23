@@ -25,16 +25,33 @@ const MovableItem = ({ item, index }) => {
     )
 }
 
-const MovingList = React.memo(({ movableItems }) => {
-    return movableItems.map((movableItem, index: number) => (
-        <MovableItem item={movableItem} index={index} key={movableItem.id} />
-    ))
+interface MovableItemProps {
+    child: any,
+    id: string
+}
+
+interface MovingListProps {
+    movableItems: MovableItemProps[]
+}
+
+const MovingList = React.memo(function MovingListMemo({ movableItems }: MovingListProps) {
+    return <>
+        {
+            movableItems.map((movableItem, index: number) => (
+                <MovableItem item={movableItem} index={index} key={movableItem.id} />
+            ))
+        }
+    </>
 })
 
-const DragMoveDrop = observer(({ children }) => {
-    const items = children.map((child, index) => {
-        return {child, id: String(index)}
-    })
+interface DragMoveDropProps {
+    children?: JSX.Element|JSX.Element[]
+}
+
+const DragMoveDrop = observer(({ children } : DragMoveDropProps) => {
+    const items = Array.isArray(children)?children.map((child, index) => {
+        return { child, id: String(index) }
+    }): [{child: children, id: '0'}]
     const dragMoveDrop = useLocalObservable(() => ({
         items: items,
         ready: false,
@@ -85,5 +102,5 @@ const DragMoveDrop = observer(({ children }) => {
         </DragDropContext>
     )
 })
- 
+
 export default DragMoveDrop

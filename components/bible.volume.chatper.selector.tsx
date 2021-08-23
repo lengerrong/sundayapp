@@ -101,7 +101,7 @@ function Chapters({ book, onChapterClick }: ChaptersProps) {
     const classes = useStyles()
     return <Grid container>
         {range(1, book.bookChapterMaxNumber, 1).map(index => {
-            return <Grid item xs={2} onClick={() => onChapterClick(index)}>
+            return <Grid key={index} item xs={2} onClick={() => onChapterClick(index)}>
                 <Card className={classes.chapterCard}>
                     <CardContent>
                         <Typography>{index}</Typography>

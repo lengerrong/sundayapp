@@ -1,7 +1,8 @@
 import { makeAutoObservable } from 'mobx'
+import { Arrangement } from '../common/arrangement'
 
 const staffArrangementStore = makeAutoObservable({
-    arrangements: [{},{},{},{}],
+    arrangements: [{} as Arrangement,{} as Arrangement,{} as Arrangement,{} as Arrangement],
     setArrangements(arrangements) {
         this.arrangements = arrangements
     }

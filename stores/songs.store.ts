@@ -1,8 +1,9 @@
 import { makeAutoObservable } from 'mobx'
+import { Song } from '../common/song'
 
 const songsStore = makeAutoObservable({
-    songs: [],
-    setSongs(songs) {
+    songs: [] as Song[],
+    setSongs(songs: Song[]) {
         this.songs = songs
     }
 })

@@ -1,14 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { MongoClient } from 'mongodb'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-type MinsterArragement = {
-    _id: string
-    riqi: string,
-    dailing: string,
-    sishi: string,
-    siqing: string,
-    siku: string
+interface MinsterArragement {
+    _id?: string,
+    riqi?: string,
+    dailing?: string,
+    sishi?: string,
+    siqing?: string,
+    siku?: string
 }
 
 type Data = MinsterArragement[]
@@ -20,7 +20,8 @@ const omit_id = (arrangement: MinsterArragement) => {
 
 async function getArrangements(req: NextApiRequest, res: NextApiResponse<Data>, mongodbClient: MongoClient) {
     let { startDate, endDate, dates } = req.query
-    if (!startDate && !dates) {
+    let datequerystring:string = dates as string
+    if (!startDate && !datequerystring) {
         return res.status(400).end()
     }
     if (!endDate) {
@@ -28,11 +29,11 @@ async function getArrangements(req: NextApiRequest, res: NextApiResponse<Data>, 
     }
     const database = mongodbClient.db('worship')
     const arrangements = database.collection('serving_staff_arrangements')
-    let result = [];
+    let result:MinsterArragement[] = [];
     if (startDate) {
         result = await arrangements.find({ riqi: {$gte: startDate, $lte: endDate}}, { sort: { riqi: 1 } }).toArray()
     } else {
-        for (let date of dates.split(',')) {
+        for (let date of datequerystring.split(',')) {
             let dateArrange = await arrangements.findOne({riqi: date})
             if (!dateArrange) {
                 dateArrange = {riqi: date}
@@ -59,8 +60,7 @@ async function setArrangements(req: NextApiRequest, res: NextApiResponse, mongod
 }
 
 const MongodbConnect = async (callback, req, res) => {
-    const client = new MongoClient(process.env.MONGODB_URL, 
-        { useNewUrlParser: true, useUnifiedTopology: true })
+    const client = new MongoClient(process.env.MONGODB_URL!)
     try {
         await client.connect()
         await callback(req, res, client)

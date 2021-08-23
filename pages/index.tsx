@@ -27,7 +27,11 @@ const getYYMMDD = (date: Date) => {
   return date.getFullYear() + "-" + to2D(date.getMonth() + 1) + "-" + to2D(date.getDate())
 }
 
-const Home = observer(({ styles }) => {
+interface HomeProps {
+  styles: any
+}
+
+const Home = observer(({ styles }: HomeProps) => {
   const { songsStore, goldenSentenceStore,
     preachingSentenceStore, readingSentenceStore,
     preachingArticleStore, reportMattersStore,
@@ -54,7 +58,7 @@ const Home = observer(({ styles }) => {
   }
   useEffect(() => {
     if (JSON.stringify(staffArrangementStore.arrangements[0]) === "{}") {
-      let sundays = []
+      let sundays: Date[] = []
       const now = new Date()
       sundays.push(new Date(now.setDate(now.getDate() - now.getDay())))
       sundays.push(new Date(now.setDate(now.getDate() + 7)))

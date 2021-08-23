@@ -37,10 +37,15 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
-const ScriptureSearch = observer(({ search, onUseSearch }) => {
+interface ScriptureSearchProps {
+    search: string,
+    onUseSearch: (scriptures: any, search: any) => void
+}
+
+const ScriptureSearch = observer(({ search, onUseSearch }: ScriptureSearchProps) => {
     const localSearch = useLocalObservable(() => ({
         text: search,
-        scriptures: null,
+        scriptures: [],
         search: null,
         anchorEl: null,
         setText(text) {
@@ -81,8 +86,8 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
     }
 
     const onAddSearch = () => {
-        const scripture = localSearch.scriptures && localSearch.scriptures[0];
-        const entries = scripture && Object.entries(scripture)
+        const scripture = (localSearch.scriptures && localSearch.scriptures.length > 0)? localSearch.scriptures[0] : null
+        const entries = scripture?Object.entries(scripture):[]
         if (entries && entries.length > 0 && entries[0][1]) {
             onUseSearch && onUseSearch(localSearch.scriptures, localSearch.search)
         }
@@ -149,7 +154,7 @@ const ScriptureSearch = observer(({ search, onUseSearch }) => {
                             return null
                         }
                         const key = Object.entries(scripture)[0][0]
-                        const value = Object.entries(scripture)[0][1]
+                        const value:any[] = Object.entries(scripture)[0][1] as any[]
                         return (<>
                             {key && value && (value.length > 0) && <h2 key={key}>{key}</h2>}
                             {value && value.map(ss => ss.map(

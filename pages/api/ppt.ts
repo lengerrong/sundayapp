@@ -49,7 +49,7 @@ async function updateReports(pres, reports, reportSlideNumber) {
   reports = reports.trim()
   let lines = reports.split('\n')
   let count = Math.ceil(lines.length / REPORT_LINES_PER_SLIDE)
-  let pages = []
+  let pages:any[] = []
   for (let i = 0; i < count; i++) {
     pages.push(lines.slice(i * REPORT_LINES_PER_SLIDE, (i + 1) * REPORT_LINES_PER_SLIDE))
   }
@@ -182,7 +182,7 @@ const scripturesPXml = '<a:p><a:pPr marL="0" lvl="0" indent="0" algn="l" rtl="0"
 async function pushscritpurestoslide(slide, lines, pspindex, titleScritureXml, scripturesXml) {
   let parser = new xml2js.Parser()
   slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][pspindex]['p:txBody'][0]['a:p'] = []
-  let lastP = null
+  let lastP = {}
   for (let line of lines) {
     let m = line.match(/^(\d+)(.*)/)
     let linexml = ''
@@ -191,11 +191,11 @@ async function pushscritpurestoslide(slide, lines, pspindex, titleScritureXml, s
       linexml = linexml.replace('placeholder2', m[2])
     } else {
       linexml = titleScritureXml.replace('placeholder', line)
-      lastP = null
+      lastP = {}
     }
     let pxmljs = await parser.parseStringPromise(linexml)
     if (m) {
-      if (!lastP) {
+      if (JSON.stringify(lastP) === '{}') {
         lastP = await parser.parseStringPromise(scripturesPXml)
         lastP['a:p']['a:r'] = []
         slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][pspindex]['p:txBody'][0]['a:p'].push(lastP['a:p'])
@@ -214,7 +214,7 @@ async function insertScripturesHelper(pres, scritpureSections: ScriptureSection[
     .map(scripture => scripture.verses.join('\n'))).join('\n')
   let lines = allline.split('\n')
   let count = Math.ceil(lines.length / SCRIPTURE_LINES_PER_SLIDE)
-  let pages = []
+  let pages:any[] = []
   for (let i = 0; i < count; i++) {
     pages.push(lines.slice(i * REPORT_LINES_PER_SLIDE, (i + 1) * REPORT_LINES_PER_SLIDE))
   }

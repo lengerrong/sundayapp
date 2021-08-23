@@ -2,7 +2,10 @@ import { observer } from 'mobx-react-lite'
 import staffArrangementStore from '../../stores/staff.arrangement.store'
 import StaffDataGrid from '../../components/staff.data.grid';
 
-const Minister = observer(({ styles }) => {
+interface MinisterProps {
+  styles: any
+}
+const Minister = observer(({ styles }: MinisterProps) => {
   const { arrangements } = staffArrangementStore;
   const onChange = (newArrangements) => {
     staffArrangementStore.setArrangements(newArrangements)

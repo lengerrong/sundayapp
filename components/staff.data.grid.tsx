@@ -1,4 +1,5 @@
 import { DataGrid } from '@material-ui/data-grid'
+import { Arrangement } from '../common/arrangement';
 
 const columns = [
     { field: 'title', sortable: false, width: 130 },
@@ -20,7 +21,12 @@ const iToKey = (i) => {
     return keys[i]
 }
 
-const StaffDataGrid = ({ arrangements, onChange }) => {
+interface StaffDataGridProps {
+    arrangements: Arrangement[]
+    onChange: (arrangements: Arrangement[]) => void
+}
+
+const StaffDataGrid = ({ arrangements, onChange }: StaffDataGridProps) => {
     for (const index in arrangements) {
         for (let i = 0; i < 4; i++) {
             rows[i][index] = arrangements[index][iToKey(i)]
@@ -31,7 +37,6 @@ const StaffDataGrid = ({ arrangements, onChange }) => {
         newArrangements[field][iToKey(id)] = value;
         onChange && onChange(newArrangements)
     }
-
     return (
         <div style={{ width: '655px' }}>
             <DataGrid rows={rows} columns={columns}

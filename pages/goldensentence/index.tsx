@@ -5,7 +5,11 @@ import BibleScripturesSelector from '../../components/bible.scriptures.selector'
 import { Book } from '../../common/book'
 import { getScriptureSectionTitle, getScriptureSectionText } from '../../utils'
 
-const GoldenSentence = observer(({ styles }) => {
+interface GoldenSentenceProps {
+  styles: any
+}
+
+const GoldenSentence = observer(({ styles }: GoldenSentenceProps) => {
   const { sentence } = goldenSentenceStore
   const local = useLocalObservable(() => ({
     open: sentence == null,

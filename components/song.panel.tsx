@@ -4,6 +4,7 @@ import { Divider, Grid, Button } from '@material-ui/core'
 import { useLocalObservable, observer } from 'mobx-react-lite'
 import NavigateBeforeRoundedIcon from '@material-ui/icons/NavigateBeforeRounded'
 import NavigateNextRoundedIcon from '@material-ui/icons/NavigateNextRounded';
+import { Song } from '../common/song'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
-const SongPanel = observer(( {song} ) => {
+interface SongPanelProps {
+    song: Song
+}
+
+const SongPanel = observer(( {song} : SongPanelProps ) => {
     const classes = useStyles()
     const localSection = useLocalObservable(() => ({
         index: 0,
