@@ -3,7 +3,7 @@ const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
 const xml2js = require('xml2js')
-import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex, getScriptureSectionSubTitle, getScriptureSectionGoldenText } from '../../utils'
+import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex, getScriptureSectionSubTitle, getScriptureSectionGoldenText, getScriptureSectionsTitle } from '../../utils'
 import { ScriptureSection } from '../../common/scritpure.section'
 //console.log(util.inspect(result, false, null))
 
@@ -42,14 +42,16 @@ async function pushparagrahtoslide(slide, lines, pspindex, pxml) {
   }
 }
 
+const REPORT_LINES_PER_SLIDE: number = 7
+
 async function updateReports(pres, reports, reportSlideNumber) {
   let slide = await pres.getSlide(reportSlideNumber)
   reports = reports.trim()
   let lines = reports.split('\n')
-  let count = Math.ceil(lines.length / 9)
+  let count = Math.ceil(lines.length / REPORT_LINES_PER_SLIDE)
   let pages = []
   for (let i = 0; i < count; i++) {
-    pages.push(lines.slice(i * 9, (i + 1) * 9))
+    pages.push(lines.slice(i * REPORT_LINES_PER_SLIDE, (i + 1) * REPORT_LINES_PER_SLIDE))
   }
   console.log(pages)
   let ocontent = JSON.stringify(slide.content)
@@ -163,16 +165,86 @@ async function insertSong(pres, song, template) {
 
 async function insertSongs(pres, songs) {
   console.log(util.inspect(songs, false, null))
-  let sanyisong = await pres.getSlide(17)
+  let sanyisong = await pres.getSlide(19)
   sanyisong = JSON.stringify(sanyisong.content)
   for (let song of songs) {
     await insertSong(pres, song, sanyisong)
   }
 }
 
+const SCRIPTURE_LINES_PER_SLIDE: number = 15
+
+const readingTitleScritureXml = '<a:p><a:pPr marL="0" lvl="0" indent="0" algn="l" rtl="0"><a:lnSpc><a:spcPct val="115000"/></a:lnSpc><a:spcBef><a:spcPts val="1200"/></a:spcBef><a:spcAft><a:spcPts val="0"/></a:spcAft><a:buClr><a:schemeClr val="dk1"/></a:buClr><a:buSzPts val="1100"/><a:buFont typeface="Arial"/><a:buNone/></a:pPr><a:r><a:rPr lang="zh-CN" altLang="en-US" sz="3200" baseline="30000" dirty="0"/><a:t>placeholder</a:t></a:r></a:p>'
+const readingScripturesXml = '<a:p><a:r><a:rPr lang="en-US" altLang="zh-CN" sz="1800" baseline="30000" dirty="0"/><a:t>placeholder1</a:t></a:r><a:r><a:rPr lang="zh-CN" altLang="en-US" sz="1800" dirty="0"/><a:t>placeholder2</a:t></a:r></a:p>'
+const preachingTitleScritureXml = '<a:p><a:pPr marL="0" lvl="0" indent="0" algn="l" rtl="0"><a:lnSpc><a:spcPct val="115000"/></a:lnSpc><a:spcBef><a:spcPts val="1200"/></a:spcBef><a:spcAft><a:spcPts val="0"/></a:spcAft><a:buClr><a:schemeClr val="dk1"/></a:buClr><a:buSzPts val="1100"/><a:buFont typeface="Arial"/><a:buNone/></a:pPr><a:r><a:rPr lang="zh-CN" altLang="en-US" sz="3200" baseline="30000" dirty="0"><a:solidFill><a:srgbClr val="FFFF00"/></a:solidFill></a:rPr><a:t>placeholder</a:t></a:r></a:p>'
+const preachingScripturesXml = '<a:p><a:r><a:rPr lang="en-US" altLang="zh-CN" sz="1800" baseline="30000" dirty="0"><a:solidFill><a:srgbClr val="FFFF00"/></a:solidFill></a:rPr><a:t>placeholder1</a:t></a:r><a:r><a:rPr lang="zh-CN" altLang="en-US" sz="1800" dirty="0"><a:solidFill><a:srgbClr val="FFFF00"/></a:solidFill></a:rPr><a:t>placeholder2</a:t></a:r></a:p>'
+const scripturesPXml = '<a:p><a:pPr marL="0" lvl="0" indent="0" algn="l" rtl="0"><a:lnSpc><a:spcPct val="115000"/></a:lnSpc><a:spcBef><a:spcPts val="1200"/></a:spcBef><a:spcAft><a:spcPts val="0"/></a:spcAft><a:buClr><a:schemeClr val="dk1"/></a:buClr><a:buSzPts val="1100"/><a:buFont typeface="Arial"/><a:buNone/></a:pPr></a:p>'
+async function pushscritpurestoslide(slide, lines, pspindex, titleScritureXml, scripturesXml) {
+  let parser = new xml2js.Parser()
+  slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][pspindex]['p:txBody'][0]['a:p'] = []
+  let lastP = null
+  for (let line of lines) {
+    let m = line.match(/^(\d+)(.*)/)
+    let linexml = ''
+    if (m) {
+      linexml = scripturesXml.replace('placeholder1', m[1])
+      linexml = linexml.replace('placeholder2', m[2])
+    } else {
+      linexml = titleScritureXml.replace('placeholder', line)
+      lastP = null
+    }
+    let pxmljs = await parser.parseStringPromise(linexml)
+    if (m) {
+      if (!lastP) {
+        lastP = await parser.parseStringPromise(scripturesPXml)
+        lastP['a:p']['a:r'] = []
+        slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][pspindex]['p:txBody'][0]['a:p'].push(lastP['a:p'])
+      }
+      lastP['a:p']['a:r'].push(pxmljs['a:p']['a:r'][0])
+      lastP['a:p']['a:r'].push(pxmljs['a:p']['a:r'][1])
+    } else {
+      slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][pspindex]['p:txBody'][0]['a:p'].push(pxmljs['a:p'])
+    }
+  }
+}
+
+async function insertScripturesHelper(pres, scritpureSections: ScriptureSection[], baseSlideNumber: number, pxml: string, axml: string) {
+  let slide = await pres.getSlide(baseSlideNumber)
+  let allline: string = scritpureSections.map((scritpureSection: ScriptureSection) => scritpureSection.scriptures
+    .map(scripture => scripture.verses.join('\n'))).join('\n')
+  let lines = allline.split('\n')
+  let count = Math.ceil(lines.length / SCRIPTURE_LINES_PER_SLIDE)
+  let pages = []
+  for (let i = 0; i < count; i++) {
+    pages.push(lines.slice(i * REPORT_LINES_PER_SLIDE, (i + 1) * REPORT_LINES_PER_SLIDE))
+  }
+  console.log(pages)
+  let ocontent = JSON.stringify(slide.content)
+  let scriptureSectionsTitle = getScriptureSectionsTitle(scritpureSections)
+  await pushscritpurestoslide(slide, pages[0], 1, pxml, axml)
+  slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = ['1 / ' + count]
+  slide.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][0]['p:txBody'][0]['a:p'][0]['a:r'][1]['a:t'] = [ scriptureSectionsTitle ]
+  let slideKey = `ppt/slides/${slide.name}.xml`
+  pres.content[slideKey] = slide.content
+
+  for (let ii = 1; ii < count; ii++) {
+    await pres.addSlide(async slideii => {
+      slideii.content = JSON.parse(ocontent)
+      await pushscritpurestoslide(slideii, pages[ii], 1, pxml, axml)
+      slideii.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][2]['p:txBody'][0]['a:p'][0]['a:r'][0]['a:t'] = [(1 + ii) + ' / ' + count]
+      slideii.content['p:sld']['p:cSld'][0]['p:spTree'][0]['p:sp'][0]['p:txBody'][0]['a:p'][0]['a:r'][1]['a:t'] = [ scriptureSectionsTitle ]
+      let slideiiKey = `ppt/slides/${slideii.name}.xml`
+      pres.content[slideiiKey] = slideii.content
+      slideii.moveTo(ii + baseSlideNumber)
+    }, 'slideLayout27')
+  }
+  return count - 1
+}
+
 async function insertScriptures(pres, readingScriptures: ScriptureSection[], preachingScriptures: ScriptureSection[], newaddedslides: number) {
-  console.log('reading slide', 15 + newaddedslides)
-  console.log('preaching slide', 16 + newaddedslides)
+  let newaddedscriptures = await insertScripturesHelper(pres, readingScriptures, 15 + newaddedslides, readingTitleScritureXml, readingScripturesXml)
+  newaddedscriptures = newaddedscriptures + await insertScripturesHelper(pres, preachingScriptures, 16 + newaddedslides + newaddedscriptures, preachingTitleScritureXml, preachingScripturesXml)
+  return newaddedscriptures
 }
 
 export default async function handler(req, res) {
@@ -190,13 +262,13 @@ export default async function handler(req, res) {
         .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
       let newaddedreports = await updateReports(pres, req.body.reports, 12 + newslidesbysongsbeforereports)
       let newslidesbysongsbeforesanyisong = req.body.songs.filter(song => song.position <= 3)
-      .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
+        .map(song => song.verses.length).reduce((accumulator, currentValue) => accumulator + currentValue)
       await insertScriptures(pres, req.body.readingScriptures, req.body.preachingScriptures, newaddedreports + newslidesbysongsbeforesanyisong)
     })
     await pptx.save(tmpPPTX)
   } catch (e) {
     console.error(e)
-    res.status(500).json({'stack': e.stack, 'reqbody':JSON.stringify(req.body)})
+    res.status(500).json({ 'stack': e.stack, 'reqbody': JSON.stringify(req.body) })
     return
   }
   res.writeHead(200, {
