@@ -1,4 +1,5 @@
 import { Book } from "../../../common/book"
+import { getChunksPath } from "../../../utils"
 
 const cnvs = require('./cnvs/bible.json')
 const path = require('path')
@@ -7,7 +8,7 @@ const fs = require('fs')
 function getScripturesByVolume(book) {
     let scriptures:any[] = []
     for (let i = 1; i <= book.bookChapterMaxNumber; i++) {
-        const chapterPath = ('../../cnvs/' + book.canon + '/' + book.bookUsfm + '/' + i).toLowerCase()
+        const chapterPath = (getChunksPath() + 'cnvs/' + book.canon + '/' + book.bookUsfm + '/' + i).toLowerCase()
         let chapterContent = fs.readFileSync(path.join(__dirname, chapterPath), { encoding: 'utf8', flag: 'r' })
         chapterContent = chapterContent.split('\n')
         scriptures.push(chapterContent)
@@ -78,7 +79,7 @@ function getScriptures({ search }) {
         if (chapterIndex > book.bookChapterMaxNumber) {
             continue
         }
-        const chapterPath = ('../../cnvs/' + book.canon + '/' + book.bookUsfm + '/' + chapterIndex).toLowerCase()
+        const chapterPath = (getChunksPath() + 'cnvs/' + book.canon + '/' + book.bookUsfm + '/' + chapterIndex).toLowerCase()
         let chapterContent = fs.readFileSync(path.join(__dirname, chapterPath), { encoding: 'utf8', flag: 'r' })
         chapterContent = chapterContent.split('\n')
         let sectionScriptures: any[] = []

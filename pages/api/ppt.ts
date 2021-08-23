@@ -3,7 +3,7 @@ const PPTX = require('nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
 const xml2js = require('xml2js')
-import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex, getScriptureSectionSubTitle, getScriptureSectionGoldenText, getScriptureSectionsTitle } from '../../utils'
+import { staffArrangeTitle, convertToRoman, getSongTitle, getSongVerseTitle, getSongVerse, getSongVerseIndex, getScriptureSectionSubTitle, getScriptureSectionGoldenText, getScriptureSectionsTitle, getChunksPath } from '../../utils'
 import { ScriptureSection } from '../../common/scritpure.section'
 //console.log(util.inspect(result, false, null))
 
@@ -252,7 +252,7 @@ export default async function handler(req, res) {
   const tmpPPTX = '/tmp/worship' + Math.random() + '.pptx'
   try {
     let pptx = new PPTX.Composer()
-    await pptx.load(__dirname + '/../../templates/worship.pptx')
+    await pptx.load(__dirname +  getChunksPath() + 'templates/worship.pptx')
     await pptx.compose(async pres => {
       await updateGoldenSentence(pres, req.body.goldensentence)
       await updateStaffArrangements(pres, req.body.staffArranges)

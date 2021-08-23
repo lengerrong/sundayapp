@@ -134,3 +134,7 @@ const romanMatrix: [number, string][]= [
     }
     return scritpure.verses.map(v => v.replace(/^\d+/, '')).join('')
   }
+
+  export function getChunksPath() {
+    return process.env.NODE_ENV.toLowerCase() === 'production' ? '/../../chunks/' : '/../../'
+  }
