@@ -2832,8 +2832,10 @@ node-releases@^1.1.71:
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-1.1.73.tgz"
   integrity sha512-uW7fodD6pyW2FZNZnp/Z3hvWKeEW1Y8R1+1CnErE8cXFXzl5blBOoVB41CvMer6P6Q0S5FXDwcHgFd1Wj0U9zg==
 
-nodejs-pptx@../node-pptx/:
-  version "1.2.2"
+nodejs-pptx@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nodejs-pptx/-/nodejs-pptx-1.0.1.tgz#84f9f02c3e0eb45cbed0993e5a1a4ffc58384ed7"
+  integrity sha512-hfXk+rlrndQSMQevmnRZsFbCBI+MlYZCOKqDdv4B/VoaBPiPTxFDJj0Henv1uUbYojc3VJ5NAIlHExE24V6VDQ==
   dependencies:
     async "^1.5.2"
     image-size "^0.6.2"
@@ -2842,7 +2844,6 @@ nodejs-pptx@../node-pptx/:
     xml-js "^1.5.2"
     xml2js "^0.4.19"
     xmlbuilder "~09.0.1"
-    yarn "^1.22.10"
 
 normalize-package-data@^2.3.2:
   version "2.5.0"
@@ -4304,11 +4305,6 @@ yargs@^17.0.1:
     string-width "^4.2.0"
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
-
-yarn@^1.22.10:
-  version "1.22.11"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.11.tgz#d0104043e7349046e0e2aec977c24be106925ed6"
-  integrity sha512-AWje4bzqO9RUn3sdnM5N8n4ZJ0BqCc/kqFJvpOI5/EVkINXui0yuvU7NDCEF//+WaxHuNay2uOHxA4+tq1P3cg==
 
 yocto-queue@^0.1.0:
   version "0.1.0"
