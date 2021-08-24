@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Chip, TextareaAutosize, Snackbar, Typography } from '@material-ui/core'
+import { Button, ButtonGroup, Chip, Snackbar, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import { observer, useLocalObservable } from 'mobx-react-lite'
@@ -40,11 +40,15 @@ const Home = observer(({ styles }: HomeProps) => {
   const local = useLocalObservable(() => ({
     openSideBar: false,
     errorMessage: null as unknown as string,
+    isGenPPT: false,
     setOpenSiderBar(openSideBar: boolean) {
       this.openSideBar = openSideBar
     },
     setErrorMessage(errorMessage: string) {
       this.errorMessage = errorMessage
+    },
+    setIsGenPPT(isGenPPT: boolean) {
+      this.isGenPPT = isGenPPT
     }
   }))
   const shouldShowSideBar = () => {
@@ -103,6 +107,7 @@ const Home = observer(({ styles }: HomeProps) => {
       local.setOpenSiderBar(true)
       return
     }
+    local.setIsGenPPT(true)
     saveStaffArranges()
     let pptParameters = {
       songs: songsStore.songs,
@@ -142,8 +147,10 @@ const Home = observer(({ styles }: HomeProps) => {
         link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
         link.remove()
         window.URL.revokeObjectURL(link.href)
+        local.setIsGenPPT(false)
       })
       .catch((e:Error) => {
+        local.setIsGenPPT(false)
         console.error(e)
         if (e.message) {
           local.setErrorMessage(e.message)
@@ -200,7 +207,7 @@ const Home = observer(({ styles }: HomeProps) => {
       </div>
       <div className={styles.buttongroup} >
         <ButtonGroup variant='contained' color='primary' size='large'>
-          <Button onClick={generatePPT}>生成PPT</Button>
+          <Button disabled={local.isGenPPT} onClick={generatePPT}>生成PPT</Button>
         </ButtonGroup>
       </div>
       <Snackbar open={local.openSideBar} autoHideDuration={6000} onClose={handleSideBarClose}>
