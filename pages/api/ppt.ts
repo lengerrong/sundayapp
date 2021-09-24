@@ -93,14 +93,14 @@ async function updateStaffArrangements(pres, arrangements) {
     return arrange
   })
   let placeholders = [
-    ['ls日', 'lsdailing', 'lssishi', 'lssiqing'],
-    ['ts日', 'tsdailing', 'tssishi', 'tssiqing'],
-    ['ns日', 'nsdailing', 'nssishi', 'nssiqing'],
-    ['nns日', 'nnsdailing', 'nnssishi', 'nnssiqing'],
+    ['ls日', 'lsdailing', 'lssishi', 'lssiqing', 'lsbabysitter', 'lsxiaozhushou'],
+    ['ts日', 'tsdailing', 'tssishi', 'tssiqing', 'tsbabysitter', 'tsxiaozhushou'],
+    ['ns日', 'nsdailing', 'nssishi', 'nssiqing', 'nsbabysitter', 'nsxiaozhushou'],
+    ['nns日', 'nnsdailing', 'nnssishi', 'nnssiqing', 'nnsbabysitter', 'nnsxiaozhushou'],
   ]
-  let keyholders = ['riqi', 'dailing', 'sishi', 'siqing']
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
+  let keyholders = ['riqi', 'dailing', 'sishi', 'siqing', 'babysitter', 'xiaozhushou']
+  for (let i = 0; i < placeholders.length; i++) {
+    for (let j = 0; j < keyholders.length; j++) {
       content = content.replace(placeholders[i][j], arrangements[i][keyholders[j]])
     }
   }

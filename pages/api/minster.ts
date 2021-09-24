@@ -8,7 +8,8 @@ interface MinsterArragement {
     dailing?: string,
     sishi?: string,
     siqing?: string,
-    siku?: string
+    babysitter?: string,
+    xiaozhushou?: string
 }
 
 type Data = MinsterArragement[]
