@@ -13,10 +13,12 @@ let rows = [
     { title: '日期', id: 0 },
     { title: '带领', id: 1 },
     { title: '司事', id: 2 },
-    { title: '司琴', id: 3 }
+    { title: '司琴', id: 3 },
+    { title: 'Baby-Sitter', id: 4 },
+    { title: '小助手', id: 5 }
 ];
 
-const keys = ['riqi', 'dailing', 'sishi', 'siqing', 'siku']
+const keys = ['riqi', 'dailing', 'sishi', 'siqing', 'babysitter', 'xiaozhushou']
 const iToKey = (i) => {
     return keys[i]
 }
@@ -28,7 +30,7 @@ interface StaffDataGridProps {
 
 const StaffDataGrid = ({ arrangements, onChange }: StaffDataGridProps) => {
     for (const index in arrangements) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < rows.length; i++) {
             rows[i][index] = arrangements[index][iToKey(i)]
         }
     }
