@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-const PPTX = require('nodejs-pptx')
+const PPTX = require('er-nodejs-pptx')
 const fs = require('fs')
 const util = require('util')
 const xml2js = require('xml2js')
