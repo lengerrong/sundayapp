@@ -2,10 +2,11 @@ import t1 from './1.txt'
 import t2 from './2.txt'
 import t3 from './3.txt'
 import t4 from './4.txt'
+import t5 from './5.txt'
 
 export default {
-  'index': '2',
-  'title': '神膏立的君王必审判列国',
+  'index': '7',
+  'title': '呼求神秉公审判',
   'type': 0,
   'verses': [
     {
@@ -23,6 +24,10 @@ export default {
     {
       'index': '4',
       'text': t4
+    },
+    {
+      'index': '5',
+      'text': t5
     }
   ]
 }
