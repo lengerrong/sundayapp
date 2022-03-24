@@ -13,8 +13,8 @@ import TextField from '@material-ui/core/TextField'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 
-const psalms = require('../jsons/psalms')
-const hymns = require('../jsons/hymns')
+import psalms from '../jsons/psalms.json'
+import hymns from '../jsons/hymns.json'
 const songs = [psalms, hymns]
 
 const useStyles = makeStyles((theme: Theme) =>
